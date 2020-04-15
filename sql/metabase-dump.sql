@@ -63,10 +63,6 @@ ALTER TABLE IF EXISTS ONLY "public"."report_card"
 DROP CONSTRAINT IF EXISTS "fk_report_card_ref_database_id";
 
 
-ALTER TABLE IF EXISTS ONLY "public"."query_queryexecution"
-DROP CONSTRAINT IF EXISTS "fk_queryexecution_ref_user_id";
-
-
 ALTER TABLE IF EXISTS ONLY "public"."qrtz_triggers"
 DROP CONSTRAINT IF EXISTS "fk_qrtz_triggers_job_details";
 
@@ -285,15 +281,6 @@ DROP INDEX IF EXISTS "public"."idx_revision_model_model_id";
 
 
 DROP INDEX IF EXISTS "public"."idx_report_dashboard_show_in_getting_started";
-
-
-DROP INDEX IF EXISTS "public"."idx_queryexecution_executor_id";
-
-
-DROP INDEX IF EXISTS "public"."idx_query_queryexecution_started_at";
-
-
-DROP INDEX IF EXISTS "public"."idx_query_queryexecution_query_hash";
 
 
 DROP INDEX IF EXISTS "public"."idx_query_execution_started_at";
@@ -590,14 +577,6 @@ ALTER TABLE IF EXISTS ONLY "public"."report_card"
 DROP CONSTRAINT IF EXISTS "report_card_pkey";
 
 
-ALTER TABLE IF EXISTS ONLY "public"."query_queryexecution"
-DROP CONSTRAINT IF EXISTS "query_queryexecution_uuid_key";
-
-
-ALTER TABLE IF EXISTS ONLY "public"."query_queryexecution"
-DROP CONSTRAINT IF EXISTS "query_queryexecution_pkey";
-
-
 ALTER TABLE IF EXISTS ONLY "public"."query"
 DROP CONSTRAINT IF EXISTS "query_pkey";
 
@@ -838,11 +817,6 @@ ALTER COLUMN "id"
 DROP DEFAULT;
 
 
-ALTER TABLE IF EXISTS "public"."query_queryexecution"
-ALTER COLUMN "id"
-DROP DEFAULT;
-
-
 ALTER TABLE IF EXISTS "public"."query_execution"
 ALTER COLUMN "id"
 DROP DEFAULT;
@@ -1027,12 +1001,6 @@ DROP SEQUENCE IF EXISTS "public"."report_card_id_seq";
 
 
 DROP TABLE IF EXISTS "public"."report_card";
-
-
-DROP SEQUENCE IF EXISTS "public"."query_queryexecution_id_seq";
-
-
-DROP TABLE IF EXISTS "public"."query_queryexecution";
 
 
 DROP SEQUENCE IF EXISTS "public"."query_execution_id_seq";
@@ -2675,8 +2643,8 @@ ALTER TABLE "public"."query" OWNER TO "metabase";
 --
 
 CREATE TABLE "public"."query_cache" ("query_hash" "bytea" NOT NULL,
-                                                          "updated_at" TIMESTAMP WITHOUT TIME ZONE NOT NULL,
-                                                                                                   "results" "bytea" NOT NULL);
+                                                          "updated_at" TIMESTAMP WITH TIME ZONE NOT NULL,
+                                                                                                "results" "bytea" NOT NULL);
 
 
 ALTER TABLE "public"."query_cache" OWNER TO "metabase";
@@ -2798,45 +2766,6 @@ ALTER TABLE "public"."query_execution_id_seq" OWNER TO "metabase";
 --
 
 ALTER SEQUENCE "public"."query_execution_id_seq" owned BY "public"."query_execution"."id";
-
---
--- Name: query_queryexecution; Type: TABLE; Schema: public; Owner: metabase
---
-
-CREATE TABLE "public"."query_queryexecution" ("id" integer NOT NULL,
-                                                           "uuid" CHARACTER varying(254) NOT NULL,
-                                                                                         "version" integer NOT NULL,
-                                                                                                           "json_query" "text" NOT NULL,
-                                                                                                                               "raw_query" "text" NOT NULL,
-                                                                                                                                                  "status" CHARACTER varying(254) NOT NULL,
-                                                                                                                                                                                  "started_at" TIMESTAMP WITH TIME ZONE NOT NULL,
-                                                                                                                                                                                                                        "finished_at" TIMESTAMP WITH TIME ZONE,
-                                                                                                                                                                                                                                                          "running_time" integer NOT NULL,
-                                                                                                                                                                                                                                                                                 "error" "text" NOT NULL,
-                                                                                                                                                                                                                                                                                                "result_file" CHARACTER varying(254) NOT NULL,
-                                                                                                                                                                                                                                                                                                                                     "result_rows" integer NOT NULL,
-                                                                                                                                                                                                                                                                                                                                                           "result_data" "text" NOT NULL,
-                                                                                                                                                                                                                                                                                                                                                                                "additional_info" "text" NOT NULL,
-                                                                                                                                                                                                                                                                                                                                                                                                         "executor_id" integer, "query_hash" integer NOT NULL);
-
-
-ALTER TABLE "public"."query_queryexecution" OWNER TO "metabase";
-
---
--- Name: query_queryexecution_id_seq; Type: SEQUENCE; Schema: public; Owner: metabase
---
-
-CREATE SEQUENCE "public"."query_queryexecution_id_seq"
-START WITH 1 INCREMENT BY 1 NO MINVALUE NO MAXVALUE CACHE 1;
-
-
-ALTER TABLE "public"."query_queryexecution_id_seq" OWNER TO "metabase";
-
---
--- Name: query_queryexecution_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: metabase
---
-
-ALTER SEQUENCE "public"."query_queryexecution_id_seq" owned BY "public"."query_queryexecution"."id";
 
 --
 -- Name: report_card; Type: TABLE; Schema: public; Owner: metabase
@@ -3433,14 +3362,6 @@ SET DEFAULT "nextval"('"public"."pulse_channel_recipient_id_seq"'::"regclass");
 ALTER TABLE ONLY "public"."query_execution"
 ALTER COLUMN "id"
 SET DEFAULT "nextval"('"public"."query_execution_id_seq"'::"regclass");
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: metabase
---
-
-ALTER TABLE ONLY "public"."query_queryexecution"
-ALTER COLUMN "id"
-SET DEFAULT "nextval"('"public"."query_queryexecution_id_seq"'::"regclass");
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: metabase
@@ -4885,43 +4806,13 @@ VALUES ('c749e64b-860e-47ee-8b8e-76b568241113', 1, '2020-03-19 10:50:21.955+01')
 INSERT INTO "public"."core_session" ("id",
                                      "user_id",
                                      "created_at")
-VALUES ('b216c58e-4058-4446-b08e-ee38978885db', 2, '2020-03-23 06:50:38.439439+01');
+VALUES ('dc273367-a46e-4f54-91ea-5340beb10191', 2, '2020-04-15 07:21:49.848391+02');
 
 
 INSERT INTO "public"."core_session" ("id",
                                      "user_id",
                                      "created_at")
-VALUES ('f1d62639-e18f-476b-aad1-7d19bd0be26e', 2, '2020-03-23 13:06:08.426763+01');
-
-
-INSERT INTO "public"."core_session" ("id",
-                                     "user_id",
-                                     "created_at")
-VALUES ('4f74178b-827e-4466-9d96-6c23fe0dafe8', 2, '2020-03-23 15:47:05.318399+01');
-
-
-INSERT INTO "public"."core_session" ("id",
-                                     "user_id",
-                                     "created_at")
-VALUES ('cf9dd250-0710-4ba5-ad61-4f2fd633c4bd', 2, '2020-04-06 13:01:33.982273+02');
-
-
-INSERT INTO "public"."core_session" ("id",
-                                     "user_id",
-                                     "created_at")
-VALUES ('6e054368-4a05-4533-b2eb-31d2319a7e4e', 2, '2020-04-07 10:16:08.576219+02');
-
-
-INSERT INTO "public"."core_session" ("id",
-                                     "user_id",
-                                     "created_at")
-VALUES ('f12ff175-10fd-4cd6-9baa-25a8c02b9d54', 2, '2020-04-07 11:16:57.589376+02');
-
-
-INSERT INTO "public"."core_session" ("id",
-                                     "user_id",
-                                     "created_at")
-VALUES ('7d5c019d-5f53-4862-91bc-d5e184177939', 2, '2020-04-07 13:08:38.37064+02');
+VALUES ('b1ddf91a-5dcf-41ca-8cd7-9c2572e4778c', 2, '2020-04-15 07:21:59.916108+02');
 
 --
 -- Data for Name: core_user; Type: TABLE DATA; Schema: public; Owner: metabase
@@ -4964,7 +4855,7 @@ INSERT INTO "public"."core_user" ("id",
                                   "ldap_auth",
                                   "login_attributes",
                                   "updated_at")
-VALUES (2, 'admin@syslab.com', 'Admin', 'Syslab', '$2a$10$j1J3nAfFanaGWJ66DJP5GuSwy2phq/6VFIoGJvNf.NFMA40eKq962', '11bc8d84-1780-4710-a09c-e31f131847ed', '2020-03-23 06:49:50.992574+01', '2020-04-07 13:08:38.51004+02', TRUE, TRUE, '$2a$10$eNt5M5v4dEAG/gzr1JQ/rOuK8ohhZ4MMhCH5oAtqyiXyCx8sDMafC', 1584942591094, FALSE, FALSE, FALSE, NULL, '2020-04-07 13:08:38.51004');
+VALUES (2, 'admin@syslab.com', 'Admin', 'Syslab', '$2a$10$8FH3AZkTBn2PAqDWo12VMePDSkPguSjs0LLxPeS/7awsfE71VAS.u', '6826d496-50a4-403c-a572-3af560545b83', '2020-03-23 06:49:50.992574+01', '2020-04-15 07:22:00.174164+02', TRUE, TRUE, NULL, NULL, FALSE, FALSE, FALSE, NULL, '2020-04-15 07:22:00.174164');
 
 --
 -- Name: core_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: metabase
@@ -5081,364 +4972,7 @@ INSERT INTO "public"."databasechangelog" ("id",
                                           "contexts",
                                           "labels",
                                           "deployment_id")
-VALUES ('97', 'senior', 'migrations/000_migrations.yaml', '2020-03-19 15:12:44.872403', 91, 'MARK_RAN', '8:9169e238663c5d036bd83428d2fa8e4b', 'modifyDataType columnName=results, tableName=query_cache', 'Added 0.32.0', NULL, '3.6.3', NULL, NULL, '4627163000');
-
-
-INSERT INTO "public"."databasechangelog" ("id",
-                                          "author",
-                                          "filename",
-                                          "dateexecuted",
-                                          "orderexecuted",
-                                          "exectype",
-                                          "md5sum",
-                                          "description",
-                                          "comments",
-                                          "tag",
-                                          "liquibase",
-                                          "contexts",
-                                          "labels",
-                                          "deployment_id")
-VALUES ('98', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:44.889073', 92, 'EXECUTED', '8:f036d20a4dc86fb60ffb64ea838ed6b9', 'addUniqueConstraint constraintName=idx_uniq_table_db_id_schema_name, tableName=metabase_table; sql', 'Added 0.32.0', NULL, '3.6.3', NULL, NULL, '4627163000');
-
-
-INSERT INTO "public"."databasechangelog" ("id",
-                                          "author",
-                                          "filename",
-                                          "dateexecuted",
-                                          "orderexecuted",
-                                          "exectype",
-                                          "md5sum",
-                                          "description",
-                                          "comments",
-                                          "tag",
-                                          "liquibase",
-                                          "contexts",
-                                          "labels",
-                                          "deployment_id")
-VALUES ('99', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:44.907794', 93, 'EXECUTED', '8:274bb516dd95b76c954b26084eed1dfe', 'addUniqueConstraint constraintName=idx_uniq_field_table_id_parent_id_name, tableName=metabase_field; sql', 'Added 0.32.0', NULL, '3.6.3', NULL, NULL, '4627163000');
-
-
-INSERT INTO "public"."databasechangelog" ("id",
-                                          "author",
-                                          "filename",
-                                          "dateexecuted",
-                                          "orderexecuted",
-                                          "exectype",
-                                          "md5sum",
-                                          "description",
-                                          "comments",
-                                          "tag",
-                                          "liquibase",
-                                          "contexts",
-                                          "labels",
-                                          "deployment_id")
-VALUES ('101', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:44.934408', 95, 'EXECUTED', '8:58eabb08a175fafe8985208545374675', 'createIndex indexName=idx_field_parent_id, tableName=metabase_field', 'Added 0.32.0', NULL, '3.6.3', NULL, NULL, '4627163000');
-
-
-INSERT INTO "public"."databasechangelog" ("id",
-                                          "author",
-                                          "filename",
-                                          "dateexecuted",
-                                          "orderexecuted",
-                                          "exectype",
-                                          "md5sum",
-                                          "description",
-                                          "comments",
-                                          "tag",
-                                          "liquibase",
-                                          "contexts",
-                                          "labels",
-                                          "deployment_id")
-VALUES ('103', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:44.948158', 96, 'EXECUTED', '8:fda3670fd16a40fd9d0f89a003098d54', 'addColumn tableName=metabase_database', 'Added 0.32.10', NULL, '3.6.3', NULL, NULL, '4627163000');
-
-
-INSERT INTO "public"."databasechangelog" ("id",
-                                          "author",
-                                          "filename",
-                                          "dateexecuted",
-                                          "orderexecuted",
-                                          "exectype",
-                                          "md5sum",
-                                          "description",
-                                          "comments",
-                                          "tag",
-                                          "liquibase",
-                                          "contexts",
-                                          "labels",
-                                          "deployment_id")
-VALUES ('106', 'sb', 'migrations/000_migrations.yaml', '2020-03-19 15:12:44.955016', 97, 'EXECUTED', '8:a3dd42bbe25c415ce21e4c180dc1c1d7', 'modifyDataType columnName=database_type, tableName=metabase_field', 'Added 0.34.0', NULL, '3.6.3', NULL, NULL, '4627163000');
-
-
-INSERT INTO "public"."databasechangelog" ("id",
-                                          "author",
-                                          "filename",
-                                          "dateexecuted",
-                                          "orderexecuted",
-                                          "exectype",
-                                          "md5sum",
-                                          "description",
-                                          "comments",
-                                          "tag",
-                                          "liquibase",
-                                          "contexts",
-                                          "labels",
-                                          "deployment_id")
-VALUES ('107', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:44.959662', 98, 'MARK_RAN', '8:605c2b4d212315c83727aa3d914cf57f', 'sql', 'Added 0.34.2', NULL, '3.6.3', NULL, NULL, '4627163000');
-
-
-INSERT INTO "public"."databasechangelog" ("id",
-                                          "author",
-                                          "filename",
-                                          "dateexecuted",
-                                          "orderexecuted",
-                                          "exectype",
-                                          "md5sum",
-                                          "description",
-                                          "comments",
-                                          "tag",
-                                          "liquibase",
-                                          "contexts",
-                                          "labels",
-                                          "deployment_id")
-VALUES ('108', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:44.964069', 99, 'MARK_RAN', '8:d11419da9384fd27d7b1670707ac864c', 'sql', 'Added 0.34.2', NULL, '3.6.3', NULL, NULL, '4627163000');
-
-
-INSERT INTO "public"."databasechangelog" ("id",
-                                          "author",
-                                          "filename",
-                                          "dateexecuted",
-                                          "orderexecuted",
-                                          "exectype",
-                                          "md5sum",
-                                          "description",
-                                          "comments",
-                                          "tag",
-                                          "liquibase",
-                                          "contexts",
-                                          "labels",
-                                          "deployment_id")
-VALUES ('109', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:44.96842', 100, 'MARK_RAN', '8:a5f4ea412eb1d5c1bc824046ad11692f', 'sql', 'Added 0.34.2', NULL, '3.6.3', NULL, NULL, '4627163000');
-
-
-INSERT INTO "public"."databasechangelog" ("id",
-                                          "author",
-                                          "filename",
-                                          "dateexecuted",
-                                          "orderexecuted",
-                                          "exectype",
-                                          "md5sum",
-                                          "description",
-                                          "comments",
-                                          "tag",
-                                          "liquibase",
-                                          "contexts",
-                                          "labels",
-                                          "deployment_id")
-VALUES ('110', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:44.972867', 101, 'MARK_RAN', '8:82343097044b9652f73f3d3a2ddd04fe', 'sql', 'Added 0.34.2', NULL, '3.6.3', NULL, NULL, '4627163000');
-
-
-INSERT INTO "public"."databasechangelog" ("id",
-                                          "author",
-                                          "filename",
-                                          "dateexecuted",
-                                          "orderexecuted",
-                                          "exectype",
-                                          "md5sum",
-                                          "description",
-                                          "comments",
-                                          "tag",
-                                          "liquibase",
-                                          "contexts",
-                                          "labels",
-                                          "deployment_id")
-VALUES ('111', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:44.977402', 102, 'MARK_RAN', '8:528de1245ba3aa106871d3e5b3eee0ba', 'sql', 'Added 0.34.2', NULL, '3.6.3', NULL, NULL, '4627163000');
-
-
-INSERT INTO "public"."databasechangelog" ("id",
-                                          "author",
-                                          "filename",
-                                          "dateexecuted",
-                                          "orderexecuted",
-                                          "exectype",
-                                          "md5sum",
-                                          "description",
-                                          "comments",
-                                          "tag",
-                                          "liquibase",
-                                          "contexts",
-                                          "labels",
-                                          "deployment_id")
-VALUES ('112', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:44.981941', 103, 'MARK_RAN', '8:010a3931299429d1adfa91941c806ea4', 'sql', 'Added 0.34.2', NULL, '3.6.3', NULL, NULL, '4627163000');
-
-
-INSERT INTO "public"."databasechangelog" ("id",
-                                          "author",
-                                          "filename",
-                                          "dateexecuted",
-                                          "orderexecuted",
-                                          "exectype",
-                                          "md5sum",
-                                          "description",
-                                          "comments",
-                                          "tag",
-                                          "liquibase",
-                                          "contexts",
-                                          "labels",
-                                          "deployment_id")
-VALUES ('113', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:44.986324', 104, 'MARK_RAN', '8:8f8e0836064bdea82487ecf64a129767', 'sql', 'Added 0.34.2', NULL, '3.6.3', NULL, NULL, '4627163000');
-
-
-INSERT INTO "public"."databasechangelog" ("id",
-                                          "author",
-                                          "filename",
-                                          "dateexecuted",
-                                          "orderexecuted",
-                                          "exectype",
-                                          "md5sum",
-                                          "description",
-                                          "comments",
-                                          "tag",
-                                          "liquibase",
-                                          "contexts",
-                                          "labels",
-                                          "deployment_id")
-VALUES ('114', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:44.990885', 105, 'MARK_RAN', '8:7a0bcb25ece6d9a311d6c6be7ed89bb7', 'sql', 'Added 0.34.2', NULL, '3.6.3', NULL, NULL, '4627163000');
-
-
-INSERT INTO "public"."databasechangelog" ("id",
-                                          "author",
-                                          "filename",
-                                          "dateexecuted",
-                                          "orderexecuted",
-                                          "exectype",
-                                          "md5sum",
-                                          "description",
-                                          "comments",
-                                          "tag",
-                                          "liquibase",
-                                          "contexts",
-                                          "labels",
-                                          "deployment_id")
-VALUES ('115', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:44.995557', 106, 'MARK_RAN', '8:55c10c2ff7e967e3ea1fdffc5aeed93a', 'sql', 'Added 0.34.2', NULL, '3.6.3', NULL, NULL, '4627163000');
-
-
-INSERT INTO "public"."databasechangelog" ("id",
-                                          "author",
-                                          "filename",
-                                          "dateexecuted",
-                                          "orderexecuted",
-                                          "exectype",
-                                          "md5sum",
-                                          "description",
-                                          "comments",
-                                          "tag",
-                                          "liquibase",
-                                          "contexts",
-                                          "labels",
-                                          "deployment_id")
-VALUES ('116', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:45.0003', 107, 'MARK_RAN', '8:dbf7c3a1d8b1eb77b7f5888126b13c2e', 'sql', 'Added 0.34.2', NULL, '3.6.3', NULL, NULL, '4627163000');
-
-
-INSERT INTO "public"."databasechangelog" ("id",
-                                          "author",
-                                          "filename",
-                                          "dateexecuted",
-                                          "orderexecuted",
-                                          "exectype",
-                                          "md5sum",
-                                          "description",
-                                          "comments",
-                                          "tag",
-                                          "liquibase",
-                                          "contexts",
-                                          "labels",
-                                          "deployment_id")
-VALUES ('121', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:45.022527', 112, 'MARK_RAN', '8:1baa145d2ffe1e18d097a63a95476c5f', 'sql', 'Added 0.34.2', NULL, '3.6.3', NULL, NULL, '4627163000');
-
-
-INSERT INTO "public"."databasechangelog" ("id",
-                                          "author",
-                                          "filename",
-                                          "dateexecuted",
-                                          "orderexecuted",
-                                          "exectype",
-                                          "md5sum",
-                                          "description",
-                                          "comments",
-                                          "tag",
-                                          "liquibase",
-                                          "contexts",
-                                          "labels",
-                                          "deployment_id")
-VALUES ('122', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:45.025652', 113, 'MARK_RAN', '8:929b3c551a8f631cdce2511612d82d62', 'sql', 'Added 0.34.2', NULL, '3.6.3', NULL, NULL, '4627163000');
-
-
-INSERT INTO "public"."databasechangelog" ("id",
-                                          "author",
-                                          "filename",
-                                          "dateexecuted",
-                                          "orderexecuted",
-                                          "exectype",
-                                          "md5sum",
-                                          "description",
-                                          "comments",
-                                          "tag",
-                                          "liquibase",
-                                          "contexts",
-                                          "labels",
-                                          "deployment_id")
-VALUES ('123', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:45.028509', 114, 'MARK_RAN', '8:35e5baddf78df5829fe6889d216436e5', 'sql', 'Added 0.34.2', NULL, '3.6.3', NULL, NULL, '4627163000');
-
-
-INSERT INTO "public"."databasechangelog" ("id",
-                                          "author",
-                                          "filename",
-                                          "dateexecuted",
-                                          "orderexecuted",
-                                          "exectype",
-                                          "md5sum",
-                                          "description",
-                                          "comments",
-                                          "tag",
-                                          "liquibase",
-                                          "contexts",
-                                          "labels",
-                                          "deployment_id")
-VALUES ('124', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:45.031174', 115, 'MARK_RAN', '8:ce2322ca187dfac51be8f12f6a132818', 'sql', 'Added 0.34.2', NULL, '3.6.3', NULL, NULL, '4627163000');
-
-
-INSERT INTO "public"."databasechangelog" ("id",
-                                          "author",
-                                          "filename",
-                                          "dateexecuted",
-                                          "orderexecuted",
-                                          "exectype",
-                                          "md5sum",
-                                          "description",
-                                          "comments",
-                                          "tag",
-                                          "liquibase",
-                                          "contexts",
-                                          "labels",
-                                          "deployment_id")
 VALUES ('125', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:45.033637', 116, 'MARK_RAN', '8:dd948ac004ceb9d0a300a8e06806945f', 'sql', 'Added 0.34.2', NULL, '3.6.3', NULL, NULL, '4627163000');
-
-
-INSERT INTO "public"."databasechangelog" ("id",
-                                          "author",
-                                          "filename",
-                                          "dateexecuted",
-                                          "orderexecuted",
-                                          "exectype",
-                                          "md5sum",
-                                          "description",
-                                          "comments",
-                                          "tag",
-                                          "liquibase",
-                                          "contexts",
-                                          "labels",
-                                          "deployment_id")
-VALUES ('126', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:45.036243', 117, 'MARK_RAN', '8:3d34c0d4e5dbb32b432b83d5322e2aa3', 'sql', 'Added 0.34.2', NULL, '3.6.3', NULL, NULL, '4627163000');
 
 
 INSERT INTO "public"."databasechangelog" ("id",
@@ -5812,23 +5346,6 @@ INSERT INTO "public"."databasechangelog" ("id",
                                           "contexts",
                                           "labels",
                                           "deployment_id")
-VALUES ('154', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:45.098137', 145, 'MARK_RAN', '8:7a1df4f7a679f47459ea1a1c0991cfba', 'sql', 'Added 0.34.2', NULL, '3.6.3', NULL, NULL, '4627163000');
-
-
-INSERT INTO "public"."databasechangelog" ("id",
-                                          "author",
-                                          "filename",
-                                          "dateexecuted",
-                                          "orderexecuted",
-                                          "exectype",
-                                          "md5sum",
-                                          "description",
-                                          "comments",
-                                          "tag",
-                                          "liquibase",
-                                          "contexts",
-                                          "labels",
-                                          "deployment_id")
 VALUES ('155', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:45.1004', 146, 'MARK_RAN', '8:3c78b79c784e3a3ce09a77db1b1d0374', 'sql', 'Added 0.34.2', NULL, '3.6.3', NULL, NULL, '4627163000');
 
 
@@ -6102,6 +5619,23 @@ INSERT INTO "public"."databasechangelog" ("id",
                                           "labels",
                                           "deployment_id")
 VALUES ('118', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:45.010533', 109, 'MARK_RAN', '8:17f4410e30a0c7e84a36517ebf4dab64', 'sql', 'Added 0.34.2', NULL, '3.6.3', NULL, NULL, '4627163000');
+
+
+INSERT INTO "public"."databasechangelog" ("id",
+                                          "author",
+                                          "filename",
+                                          "dateexecuted",
+                                          "orderexecuted",
+                                          "exectype",
+                                          "md5sum",
+                                          "description",
+                                          "comments",
+                                          "tag",
+                                          "liquibase",
+                                          "contexts",
+                                          "labels",
+                                          "deployment_id")
+VALUES ('154', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:45.098137', 145, 'MARK_RAN', '8:7a1df4f7a679f47459ea1a1c0991cfba', 'sql', 'Added 0.34.2', NULL, '3.6.3', NULL, NULL, '4627163000');
 
 
 INSERT INTO "public"."databasechangelog" ("id",
@@ -6611,6 +6145,23 @@ INSERT INTO "public"."databasechangelog" ("id",
                                           "contexts",
                                           "labels",
                                           "deployment_id")
+VALUES ('73', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:44.515982', 71, 'EXECUTED', '8:3c0f03d18ff78a0bcc9915e1d9c518d6', 'addColumn tableName=metabase_database', 'Added 0.29.0', NULL, '3.6.3', NULL, NULL, '4627163000');
+
+
+INSERT INTO "public"."databasechangelog" ("id",
+                                          "author",
+                                          "filename",
+                                          "dateexecuted",
+                                          "orderexecuted",
+                                          "exectype",
+                                          "md5sum",
+                                          "description",
+                                          "comments",
+                                          "tag",
+                                          "liquibase",
+                                          "contexts",
+                                          "labels",
+                                          "deployment_id")
 VALUES ('13', 'agilliland', 'migrations/000_migrations.yaml', '2020-03-19 15:12:43.512504', 12, 'EXECUTED', '8:c2c65930bad8d3e9bab3bb6ae562fe0c', 'createTable tableName=activity; createIndex indexName=idx_activity_timestamp, tableName=activity; createIndex indexName=idx_activity_user_id, tableName=activity; createIndex indexName=idx_activity_custom_id, tableName=activity', '', NULL, '3.6.3', NULL, NULL, '4627163000');
 
 
@@ -7087,6 +6638,23 @@ INSERT INTO "public"."databasechangelog" ("id",
                                           "contexts",
                                           "labels",
                                           "deployment_id")
+VALUES ('126', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:45.036243', 117, 'MARK_RAN', '8:3d34c0d4e5dbb32b432b83d5322e2aa3', 'sql', 'Added 0.34.2', NULL, '3.6.3', NULL, NULL, '4627163000');
+
+
+INSERT INTO "public"."databasechangelog" ("id",
+                                          "author",
+                                          "filename",
+                                          "dateexecuted",
+                                          "orderexecuted",
+                                          "exectype",
+                                          "md5sum",
+                                          "description",
+                                          "comments",
+                                          "tag",
+                                          "liquibase",
+                                          "contexts",
+                                          "labels",
+                                          "deployment_id")
 VALUES ('70', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:44.492592', 68, 'EXECUTED', '8:4e4eff7abb983b1127a32ba8107e7fb8', 'addColumn tableName=metabase_field; addNotNullConstraint columnName=database_type, tableName=metabase_field', 'Added 0.28.0', NULL, '3.6.3', NULL, NULL, '4627163000');
 
 
@@ -7122,57 +6690,6 @@ INSERT INTO "public"."databasechangelog" ("id",
                                           "labels",
                                           "deployment_id")
 VALUES ('72', 'senior', 'migrations/000_migrations.yaml', '2020-03-19 15:12:44.508358', 70, 'EXECUTED', '8:ed16046dfa04c139f48e9068eb4faee4', 'addColumn tableName=pulse_card', 'Added 0.28.0', NULL, '3.6.3', NULL, NULL, '4627163000');
-
-
-INSERT INTO "public"."databasechangelog" ("id",
-                                          "author",
-                                          "filename",
-                                          "dateexecuted",
-                                          "orderexecuted",
-                                          "exectype",
-                                          "md5sum",
-                                          "description",
-                                          "comments",
-                                          "tag",
-                                          "liquibase",
-                                          "contexts",
-                                          "labels",
-                                          "deployment_id")
-VALUES ('73', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:44.515982', 71, 'EXECUTED', '8:3c0f03d18ff78a0bcc9915e1d9c518d6', 'addColumn tableName=metabase_database', 'Added 0.29.0', NULL, '3.6.3', NULL, NULL, '4627163000');
-
-
-INSERT INTO "public"."databasechangelog" ("id",
-                                          "author",
-                                          "filename",
-                                          "dateexecuted",
-                                          "orderexecuted",
-                                          "exectype",
-                                          "md5sum",
-                                          "description",
-                                          "comments",
-                                          "tag",
-                                          "liquibase",
-                                          "contexts",
-                                          "labels",
-                                          "deployment_id")
-VALUES ('74', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:44.523515', 72, 'EXECUTED', '8:16726d6560851325930c25caf3c8ab96', 'addColumn tableName=metabase_field', 'Added 0.29.0', NULL, '3.6.3', NULL, NULL, '4627163000');
-
-
-INSERT INTO "public"."databasechangelog" ("id",
-                                          "author",
-                                          "filename",
-                                          "dateexecuted",
-                                          "orderexecuted",
-                                          "exectype",
-                                          "md5sum",
-                                          "description",
-                                          "comments",
-                                          "tag",
-                                          "liquibase",
-                                          "contexts",
-                                          "labels",
-                                          "deployment_id")
-VALUES ('75', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:44.530922', 73, 'EXECUTED', '8:6072cabfe8188872d8e3da9a675f88c1', 'addColumn tableName=report_card', 'Added 0.28.2', NULL, '3.6.3', NULL, NULL, '4627163000');
 
 
 INSERT INTO "public"."databasechangelog" ("id",
@@ -7632,6 +7149,414 @@ INSERT INTO "public"."databasechangelog" ("id",
                                           "labels",
                                           "deployment_id")
 VALUES ('59', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:44.394625', 58, 'EXECUTED', '8:5b6ce52371e0e9eee88e6d766225a94b', 'addColumn tableName=metabase_field', 'Added 0.26.0', NULL, '3.6.3', NULL, NULL, '4627163000');
+
+
+INSERT INTO "public"."databasechangelog" ("id",
+                                          "author",
+                                          "filename",
+                                          "dateexecuted",
+                                          "orderexecuted",
+                                          "exectype",
+                                          "md5sum",
+                                          "description",
+                                          "comments",
+                                          "tag",
+                                          "liquibase",
+                                          "contexts",
+                                          "labels",
+                                          "deployment_id")
+VALUES ('161', 'camsaul', 'migrations/000_migrations.yaml', '2020-04-14 15:17:42.756358', 152, 'EXECUTED', '8:329007e64f9fcc7f0dc4b9d91bea3348', 'modifyDataType columnName=updated_at, tableName=query_cache', 'Added 0.35.0', NULL, '3.6.3', NULL, NULL, '6870262636');
+
+
+INSERT INTO "public"."databasechangelog" ("id",
+                                          "author",
+                                          "filename",
+                                          "dateexecuted",
+                                          "orderexecuted",
+                                          "exectype",
+                                          "md5sum",
+                                          "description",
+                                          "comments",
+                                          "tag",
+                                          "liquibase",
+                                          "contexts",
+                                          "labels",
+                                          "deployment_id")
+VALUES ('97', 'senior', 'migrations/000_migrations.yaml', '2020-03-19 15:12:44.872403', 91, 'MARK_RAN', '8:9169e238663c5d036bd83428d2fa8e4b', 'modifyDataType columnName=results, tableName=query_cache', 'Added 0.32.0', NULL, '3.6.3', NULL, NULL, '4627163000');
+
+
+INSERT INTO "public"."databasechangelog" ("id",
+                                          "author",
+                                          "filename",
+                                          "dateexecuted",
+                                          "orderexecuted",
+                                          "exectype",
+                                          "md5sum",
+                                          "description",
+                                          "comments",
+                                          "tag",
+                                          "liquibase",
+                                          "contexts",
+                                          "labels",
+                                          "deployment_id")
+VALUES ('98', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:44.889073', 92, 'EXECUTED', '8:f036d20a4dc86fb60ffb64ea838ed6b9', 'addUniqueConstraint constraintName=idx_uniq_table_db_id_schema_name, tableName=metabase_table; sql', 'Added 0.32.0', NULL, '3.6.3', NULL, NULL, '4627163000');
+
+
+INSERT INTO "public"."databasechangelog" ("id",
+                                          "author",
+                                          "filename",
+                                          "dateexecuted",
+                                          "orderexecuted",
+                                          "exectype",
+                                          "md5sum",
+                                          "description",
+                                          "comments",
+                                          "tag",
+                                          "liquibase",
+                                          "contexts",
+                                          "labels",
+                                          "deployment_id")
+VALUES ('99', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:44.907794', 93, 'EXECUTED', '8:274bb516dd95b76c954b26084eed1dfe', 'addUniqueConstraint constraintName=idx_uniq_field_table_id_parent_id_name, tableName=metabase_field; sql', 'Added 0.32.0', NULL, '3.6.3', NULL, NULL, '4627163000');
+
+
+INSERT INTO "public"."databasechangelog" ("id",
+                                          "author",
+                                          "filename",
+                                          "dateexecuted",
+                                          "orderexecuted",
+                                          "exectype",
+                                          "md5sum",
+                                          "description",
+                                          "comments",
+                                          "tag",
+                                          "liquibase",
+                                          "contexts",
+                                          "labels",
+                                          "deployment_id")
+VALUES ('101', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:44.934408', 95, 'EXECUTED', '8:58eabb08a175fafe8985208545374675', 'createIndex indexName=idx_field_parent_id, tableName=metabase_field', 'Added 0.32.0', NULL, '3.6.3', NULL, NULL, '4627163000');
+
+
+INSERT INTO "public"."databasechangelog" ("id",
+                                          "author",
+                                          "filename",
+                                          "dateexecuted",
+                                          "orderexecuted",
+                                          "exectype",
+                                          "md5sum",
+                                          "description",
+                                          "comments",
+                                          "tag",
+                                          "liquibase",
+                                          "contexts",
+                                          "labels",
+                                          "deployment_id")
+VALUES ('103', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:44.948158', 96, 'EXECUTED', '8:fda3670fd16a40fd9d0f89a003098d54', 'addColumn tableName=metabase_database', 'Added 0.32.10', NULL, '3.6.3', NULL, NULL, '4627163000');
+
+
+INSERT INTO "public"."databasechangelog" ("id",
+                                          "author",
+                                          "filename",
+                                          "dateexecuted",
+                                          "orderexecuted",
+                                          "exectype",
+                                          "md5sum",
+                                          "description",
+                                          "comments",
+                                          "tag",
+                                          "liquibase",
+                                          "contexts",
+                                          "labels",
+                                          "deployment_id")
+VALUES ('106', 'sb', 'migrations/000_migrations.yaml', '2020-03-19 15:12:44.955016', 97, 'EXECUTED', '8:a3dd42bbe25c415ce21e4c180dc1c1d7', 'modifyDataType columnName=database_type, tableName=metabase_field', 'Added 0.34.0', NULL, '3.6.3', NULL, NULL, '4627163000');
+
+
+INSERT INTO "public"."databasechangelog" ("id",
+                                          "author",
+                                          "filename",
+                                          "dateexecuted",
+                                          "orderexecuted",
+                                          "exectype",
+                                          "md5sum",
+                                          "description",
+                                          "comments",
+                                          "tag",
+                                          "liquibase",
+                                          "contexts",
+                                          "labels",
+                                          "deployment_id")
+VALUES ('107', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:44.959662', 98, 'MARK_RAN', '8:605c2b4d212315c83727aa3d914cf57f', 'sql', 'Added 0.34.2', NULL, '3.6.3', NULL, NULL, '4627163000');
+
+
+INSERT INTO "public"."databasechangelog" ("id",
+                                          "author",
+                                          "filename",
+                                          "dateexecuted",
+                                          "orderexecuted",
+                                          "exectype",
+                                          "md5sum",
+                                          "description",
+                                          "comments",
+                                          "tag",
+                                          "liquibase",
+                                          "contexts",
+                                          "labels",
+                                          "deployment_id")
+VALUES ('108', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:44.964069', 99, 'MARK_RAN', '8:d11419da9384fd27d7b1670707ac864c', 'sql', 'Added 0.34.2', NULL, '3.6.3', NULL, NULL, '4627163000');
+
+
+INSERT INTO "public"."databasechangelog" ("id",
+                                          "author",
+                                          "filename",
+                                          "dateexecuted",
+                                          "orderexecuted",
+                                          "exectype",
+                                          "md5sum",
+                                          "description",
+                                          "comments",
+                                          "tag",
+                                          "liquibase",
+                                          "contexts",
+                                          "labels",
+                                          "deployment_id")
+VALUES ('109', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:44.96842', 100, 'MARK_RAN', '8:a5f4ea412eb1d5c1bc824046ad11692f', 'sql', 'Added 0.34.2', NULL, '3.6.3', NULL, NULL, '4627163000');
+
+
+INSERT INTO "public"."databasechangelog" ("id",
+                                          "author",
+                                          "filename",
+                                          "dateexecuted",
+                                          "orderexecuted",
+                                          "exectype",
+                                          "md5sum",
+                                          "description",
+                                          "comments",
+                                          "tag",
+                                          "liquibase",
+                                          "contexts",
+                                          "labels",
+                                          "deployment_id")
+VALUES ('110', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:44.972867', 101, 'MARK_RAN', '8:82343097044b9652f73f3d3a2ddd04fe', 'sql', 'Added 0.34.2', NULL, '3.6.3', NULL, NULL, '4627163000');
+
+
+INSERT INTO "public"."databasechangelog" ("id",
+                                          "author",
+                                          "filename",
+                                          "dateexecuted",
+                                          "orderexecuted",
+                                          "exectype",
+                                          "md5sum",
+                                          "description",
+                                          "comments",
+                                          "tag",
+                                          "liquibase",
+                                          "contexts",
+                                          "labels",
+                                          "deployment_id")
+VALUES ('111', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:44.977402', 102, 'MARK_RAN', '8:528de1245ba3aa106871d3e5b3eee0ba', 'sql', 'Added 0.34.2', NULL, '3.6.3', NULL, NULL, '4627163000');
+
+
+INSERT INTO "public"."databasechangelog" ("id",
+                                          "author",
+                                          "filename",
+                                          "dateexecuted",
+                                          "orderexecuted",
+                                          "exectype",
+                                          "md5sum",
+                                          "description",
+                                          "comments",
+                                          "tag",
+                                          "liquibase",
+                                          "contexts",
+                                          "labels",
+                                          "deployment_id")
+VALUES ('112', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:44.981941', 103, 'MARK_RAN', '8:010a3931299429d1adfa91941c806ea4', 'sql', 'Added 0.34.2', NULL, '3.6.3', NULL, NULL, '4627163000');
+
+
+INSERT INTO "public"."databasechangelog" ("id",
+                                          "author",
+                                          "filename",
+                                          "dateexecuted",
+                                          "orderexecuted",
+                                          "exectype",
+                                          "md5sum",
+                                          "description",
+                                          "comments",
+                                          "tag",
+                                          "liquibase",
+                                          "contexts",
+                                          "labels",
+                                          "deployment_id")
+VALUES ('113', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:44.986324', 104, 'MARK_RAN', '8:8f8e0836064bdea82487ecf64a129767', 'sql', 'Added 0.34.2', NULL, '3.6.3', NULL, NULL, '4627163000');
+
+
+INSERT INTO "public"."databasechangelog" ("id",
+                                          "author",
+                                          "filename",
+                                          "dateexecuted",
+                                          "orderexecuted",
+                                          "exectype",
+                                          "md5sum",
+                                          "description",
+                                          "comments",
+                                          "tag",
+                                          "liquibase",
+                                          "contexts",
+                                          "labels",
+                                          "deployment_id")
+VALUES ('114', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:44.990885', 105, 'MARK_RAN', '8:7a0bcb25ece6d9a311d6c6be7ed89bb7', 'sql', 'Added 0.34.2', NULL, '3.6.3', NULL, NULL, '4627163000');
+
+
+INSERT INTO "public"."databasechangelog" ("id",
+                                          "author",
+                                          "filename",
+                                          "dateexecuted",
+                                          "orderexecuted",
+                                          "exectype",
+                                          "md5sum",
+                                          "description",
+                                          "comments",
+                                          "tag",
+                                          "liquibase",
+                                          "contexts",
+                                          "labels",
+                                          "deployment_id")
+VALUES ('115', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:44.995557', 106, 'MARK_RAN', '8:55c10c2ff7e967e3ea1fdffc5aeed93a', 'sql', 'Added 0.34.2', NULL, '3.6.3', NULL, NULL, '4627163000');
+
+
+INSERT INTO "public"."databasechangelog" ("id",
+                                          "author",
+                                          "filename",
+                                          "dateexecuted",
+                                          "orderexecuted",
+                                          "exectype",
+                                          "md5sum",
+                                          "description",
+                                          "comments",
+                                          "tag",
+                                          "liquibase",
+                                          "contexts",
+                                          "labels",
+                                          "deployment_id")
+VALUES ('116', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:45.0003', 107, 'MARK_RAN', '8:dbf7c3a1d8b1eb77b7f5888126b13c2e', 'sql', 'Added 0.34.2', NULL, '3.6.3', NULL, NULL, '4627163000');
+
+
+INSERT INTO "public"."databasechangelog" ("id",
+                                          "author",
+                                          "filename",
+                                          "dateexecuted",
+                                          "orderexecuted",
+                                          "exectype",
+                                          "md5sum",
+                                          "description",
+                                          "comments",
+                                          "tag",
+                                          "liquibase",
+                                          "contexts",
+                                          "labels",
+                                          "deployment_id")
+VALUES ('121', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:45.022527', 112, 'MARK_RAN', '8:1baa145d2ffe1e18d097a63a95476c5f', 'sql', 'Added 0.34.2', NULL, '3.6.3', NULL, NULL, '4627163000');
+
+
+INSERT INTO "public"."databasechangelog" ("id",
+                                          "author",
+                                          "filename",
+                                          "dateexecuted",
+                                          "orderexecuted",
+                                          "exectype",
+                                          "md5sum",
+                                          "description",
+                                          "comments",
+                                          "tag",
+                                          "liquibase",
+                                          "contexts",
+                                          "labels",
+                                          "deployment_id")
+VALUES ('122', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:45.025652', 113, 'MARK_RAN', '8:929b3c551a8f631cdce2511612d82d62', 'sql', 'Added 0.34.2', NULL, '3.6.3', NULL, NULL, '4627163000');
+
+
+INSERT INTO "public"."databasechangelog" ("id",
+                                          "author",
+                                          "filename",
+                                          "dateexecuted",
+                                          "orderexecuted",
+                                          "exectype",
+                                          "md5sum",
+                                          "description",
+                                          "comments",
+                                          "tag",
+                                          "liquibase",
+                                          "contexts",
+                                          "labels",
+                                          "deployment_id")
+VALUES ('123', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:45.028509', 114, 'MARK_RAN', '8:35e5baddf78df5829fe6889d216436e5', 'sql', 'Added 0.34.2', NULL, '3.6.3', NULL, NULL, '4627163000');
+
+
+INSERT INTO "public"."databasechangelog" ("id",
+                                          "author",
+                                          "filename",
+                                          "dateexecuted",
+                                          "orderexecuted",
+                                          "exectype",
+                                          "md5sum",
+                                          "description",
+                                          "comments",
+                                          "tag",
+                                          "liquibase",
+                                          "contexts",
+                                          "labels",
+                                          "deployment_id")
+VALUES ('124', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:45.031174', 115, 'MARK_RAN', '8:ce2322ca187dfac51be8f12f6a132818', 'sql', 'Added 0.34.2', NULL, '3.6.3', NULL, NULL, '4627163000');
+
+
+INSERT INTO "public"."databasechangelog" ("id",
+                                          "author",
+                                          "filename",
+                                          "dateexecuted",
+                                          "orderexecuted",
+                                          "exectype",
+                                          "md5sum",
+                                          "description",
+                                          "comments",
+                                          "tag",
+                                          "liquibase",
+                                          "contexts",
+                                          "labels",
+                                          "deployment_id")
+VALUES ('74', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:44.523515', 72, 'EXECUTED', '8:16726d6560851325930c25caf3c8ab96', 'addColumn tableName=metabase_field', 'Added 0.29.0', NULL, '3.6.3', NULL, NULL, '4627163000');
+
+
+INSERT INTO "public"."databasechangelog" ("id",
+                                          "author",
+                                          "filename",
+                                          "dateexecuted",
+                                          "orderexecuted",
+                                          "exectype",
+                                          "md5sum",
+                                          "description",
+                                          "comments",
+                                          "tag",
+                                          "liquibase",
+                                          "contexts",
+                                          "labels",
+                                          "deployment_id")
+VALUES ('75', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:44.530922', 73, 'EXECUTED', '8:6072cabfe8188872d8e3da9a675f88c1', 'addColumn tableName=report_card', 'Added 0.28.2', NULL, '3.6.3', NULL, NULL, '4627163000');
+
+
+INSERT INTO "public"."databasechangelog" ("id",
+                                          "author",
+                                          "filename",
+                                          "dateexecuted",
+                                          "orderexecuted",
+                                          "exectype",
+                                          "md5sum",
+                                          "description",
+                                          "comments",
+                                          "tag",
+                                          "liquibase",
+                                          "contexts",
+                                          "labels",
+                                          "deployment_id")
+VALUES ('162', 'camsaul', 'migrations/000_migrations.yaml', '2020-04-14 15:17:42.802276', 153, 'EXECUTED', '8:c37f015ad11d77d66e09925eed605cdf', 'dropTable tableName=query_queryexecution', 'Added 0.23.0 as a data migration; converted to Liquibase migration in 0.35.0', NULL, '3.6.3', NULL, NULL, '6870262636');
 
 --
 -- Data for Name: databasechangeloglock; Type: TABLE DATA; Schema: public; Owner: metabase
@@ -10118,6 +10043,32 @@ INSERT INTO "public"."metabase_field" ("id",
                                        "database_type",
                                        "has_field_values",
                                        "settings")
+VALUES (264, '2020-03-19 11:35:46.534+01', '2020-03-19 11:35:56.183+01', 'published', 'type/Boolean', 'type/Category', TRUE, NULL, TRUE, 0, 53, NULL, 'Published', 'normal', NULL, '2020-03-19 11:35:56.349+01', NULL, NULL, '{"global":{"distinct-count":2,"nil%":0.0}}', 4, 'bool', 'auto-list', NULL);
+
+
+INSERT INTO "public"."metabase_field" ("id",
+                                       "created_at",
+                                       "updated_at",
+                                       "name",
+                                       "base_type",
+                                       "special_type",
+                                       "active",
+                                       "description",
+                                       "preview_display",
+                                       "position",
+                                       "table_id",
+                                       "parent_id",
+                                       "display_name",
+                                       "visibility_type",
+                                       "fk_target_field_id",
+                                       "last_analyzed",
+                                       "points_of_interest",
+                                       "caveats",
+                                       "fingerprint",
+                                       "fingerprint_version",
+                                       "database_type",
+                                       "has_field_values",
+                                       "settings")
 VALUES (230, '2020-03-19 11:35:46.424+01', '2020-03-19 11:35:50.349+01', 'risk_id', 'type/Text', NULL, TRUE, NULL, TRUE, 0, 48, NULL, 'Risk ID', 'normal', NULL, '2020-03-19 11:35:56.349+01', NULL, NULL, '{"global":{"distinct-count":374,"nil%":0.0012},"type":{"type/Text":{"percent-json":0.0,"percent-url":0.0,"percent-email":0.0,"average-length":2.5164}}}', 4, 'varchar', NULL, NULL);
 
 
@@ -10873,32 +10824,6 @@ INSERT INTO "public"."metabase_field" ("id",
                                        "has_field_values",
                                        "settings")
 VALUES (263, '2020-03-19 11:35:46.534+01', '2020-03-19 11:35:50.832+01', 'creation_date', 'type/DateTime', NULL, TRUE, NULL, TRUE, 0, 53, NULL, 'Creation Date', 'normal', NULL, '2020-03-19 11:35:56.349+01', NULL, NULL, '{"global":{"distinct-count":161,"nil%":0.0},"type":{"type/DateTime":{"earliest":"2010-06-30T16:54:15.388638","latest":"2016-10-25T09:13:12.630644"}}}', 4, 'timestamp', NULL, NULL);
-
-
-INSERT INTO "public"."metabase_field" ("id",
-                                       "created_at",
-                                       "updated_at",
-                                       "name",
-                                       "base_type",
-                                       "special_type",
-                                       "active",
-                                       "description",
-                                       "preview_display",
-                                       "position",
-                                       "table_id",
-                                       "parent_id",
-                                       "display_name",
-                                       "visibility_type",
-                                       "fk_target_field_id",
-                                       "last_analyzed",
-                                       "points_of_interest",
-                                       "caveats",
-                                       "fingerprint",
-                                       "fingerprint_version",
-                                       "database_type",
-                                       "has_field_values",
-                                       "settings")
-VALUES (264, '2020-03-19 11:35:46.534+01', '2020-03-19 11:35:56.183+01', 'published', 'type/Boolean', 'type/Category', TRUE, NULL, TRUE, 0, 53, NULL, 'Published', 'normal', NULL, '2020-03-19 11:35:56.349+01', NULL, NULL, '{"global":{"distinct-count":2,"nil%":0.0}}', 4, 'bool', 'auto-list', NULL);
 
 
 INSERT INTO "public"."metabase_field" ("id",
@@ -12568,31 +12493,15 @@ INSERT INTO "public"."qrtz_cron_triggers" ("sched_name",
                                            "trigger_group",
                                            "cron_expression",
                                            "time_zone_id")
+VALUES ('MetabaseScheduler', 'metabase.task.update-field-values.trigger.34', 'DEFAULT', '0 0 0 * * ? *', 'Europe/Berlin');
+
+
+INSERT INTO "public"."qrtz_cron_triggers" ("sched_name",
+                                           "trigger_name",
+                                           "trigger_group",
+                                           "cron_expression",
+                                           "time_zone_id")
 VALUES ('MetabaseScheduler', 'metabase.task.upgrade-checks.trigger', 'DEFAULT', '0 15 6,18 * * ? *', 'Europe/Berlin');
-
-
-INSERT INTO "public"."qrtz_cron_triggers" ("sched_name",
-                                           "trigger_name",
-                                           "trigger_group",
-                                           "cron_expression",
-                                           "time_zone_id")
-VALUES ('MetabaseScheduler', 'metabase.task.anonymous-stats.trigger', 'DEFAULT', '0 15 7 * * ? *', 'Europe/Berlin');
-
-
-INSERT INTO "public"."qrtz_cron_triggers" ("sched_name",
-                                           "trigger_name",
-                                           "trigger_group",
-                                           "cron_expression",
-                                           "time_zone_id")
-VALUES ('MetabaseScheduler', 'metabase.task.follow-up-emails.trigger', 'DEFAULT', '0 0 12 * * ? *', 'Europe/Berlin');
-
-
-INSERT INTO "public"."qrtz_cron_triggers" ("sched_name",
-                                           "trigger_name",
-                                           "trigger_group",
-                                           "cron_expression",
-                                           "time_zone_id")
-VALUES ('MetabaseScheduler', 'metabase.task.abandonment-emails.trigger', 'DEFAULT', '0 0 12 * * ? *', 'Europe/Berlin');
 
 
 INSERT INTO "public"."qrtz_cron_triggers" ("sched_name",
@@ -12608,14 +12517,6 @@ INSERT INTO "public"."qrtz_cron_triggers" ("sched_name",
                                            "trigger_group",
                                            "cron_expression",
                                            "time_zone_id")
-VALUES ('MetabaseScheduler', 'metabase.task.sync-and-analyze.trigger.34', 'DEFAULT', '0 0 * * * ? *', 'Europe/Berlin');
-
-
-INSERT INTO "public"."qrtz_cron_triggers" ("sched_name",
-                                           "trigger_name",
-                                           "trigger_group",
-                                           "cron_expression",
-                                           "time_zone_id")
 VALUES ('MetabaseScheduler', 'metabase.task.task-history-cleanup.trigger', 'DEFAULT', '0 0 * * * ? *', 'Europe/Berlin');
 
 
@@ -12624,7 +12525,31 @@ INSERT INTO "public"."qrtz_cron_triggers" ("sched_name",
                                            "trigger_group",
                                            "cron_expression",
                                            "time_zone_id")
-VALUES ('MetabaseScheduler', 'metabase.task.update-field-values.trigger.34', 'DEFAULT', '0 0 0 * * ? *', 'Europe/Berlin');
+VALUES ('MetabaseScheduler', 'metabase.task.sync-and-analyze.trigger.34', 'DEFAULT', '0 0 * * * ? *', 'Europe/Berlin');
+
+
+INSERT INTO "public"."qrtz_cron_triggers" ("sched_name",
+                                           "trigger_name",
+                                           "trigger_group",
+                                           "cron_expression",
+                                           "time_zone_id")
+VALUES ('MetabaseScheduler', 'metabase.task.anonymous-stats.trigger', 'DEFAULT', '0 15 7 * * ? *', 'Europe/Berlin');
+
+
+INSERT INTO "public"."qrtz_cron_triggers" ("sched_name",
+                                           "trigger_name",
+                                           "trigger_group",
+                                           "cron_expression",
+                                           "time_zone_id")
+VALUES ('MetabaseScheduler', 'metabase.task.abandonment-emails.trigger', 'DEFAULT', '0 0 12 * * ? *', 'Europe/Berlin');
+
+
+INSERT INTO "public"."qrtz_cron_triggers" ("sched_name",
+                                           "trigger_name",
+                                           "trigger_group",
+                                           "cron_expression",
+                                           "time_zone_id")
+VALUES ('MetabaseScheduler', 'metabase.task.follow-up-emails.trigger', 'DEFAULT', '0 0 12 * * ? *', 'Europe/Berlin');
 
 --
 -- Data for Name: qrtz_fired_triggers; Type: TABLE DATA; Schema: public; Owner: metabase
@@ -12760,7 +12685,7 @@ INSERT INTO "public"."qrtz_scheduler_state" ("sched_name",
                                              "instance_name",
                                              "last_checkin_time",
                                              "checkin_interval")
-VALUES ('MetabaseScheduler', 'osha1585304463484', 1586350658288, 7500);
+VALUES ('MetabaseScheduler', 'osha1586870263314', 1586928186784, 7500);
 
 --
 -- Data for Name: qrtz_simple_triggers; Type: TABLE DATA; Schema: public; Owner: metabase
@@ -12788,7 +12713,7 @@ INSERT INTO "public"."qrtz_triggers" ("sched_name",
                                       "calendar_name",
                                       "misfire_instr",
                                       "job_data")
-VALUES ('MetabaseScheduler', 'metabase.task.follow-up-emails.trigger', 'DEFAULT', 'metabase.task.follow-up-emails.job', 'DEFAULT', NULL, 1586426400000, 1586340000000, 5, 'WAITING', 'CRON', 1585304464000, 0, NULL, 0, '\x');
+VALUES ('MetabaseScheduler', 'metabase.task.upgrade-checks.trigger', 'DEFAULT', 'metabase.task.upgrade-checks.job', 'DEFAULT', NULL, 1586967300000, 1586924100000, 5, 'WAITING', 'CRON', 1586870263000, 0, NULL, 0, '\x');
 
 
 INSERT INTO "public"."qrtz_triggers" ("sched_name",
@@ -12807,7 +12732,7 @@ INSERT INTO "public"."qrtz_triggers" ("sched_name",
                                       "calendar_name",
                                       "misfire_instr",
                                       "job_data")
-VALUES ('MetabaseScheduler', 'metabase.task.anonymous-stats.trigger', 'DEFAULT', 'metabase.task.anonymous-stats.job', 'DEFAULT', NULL, 1586409300000, 1586322900000, 5, 'WAITING', 'CRON', 1585304463000, 0, NULL, 0, '\x');
+VALUES ('MetabaseScheduler', 'metabase.task.update-field-values.trigger.34', 'DEFAULT', 'metabase.task.update-field-values.job', 'DEFAULT', 'update-field-values Database 34', 1586988000000, 1586901600000, 5, 'WAITING', 'CRON', 1586870263000, 0, NULL, 2, '\xaced0005737200156f72672e71756172747a2e4a6f62446174614d61709fb083e8bfa9b0cb020000787200266f72672e71756172747a2e7574696c732e537472696e674b65794469727479466c61674d61708208e8c3fbc55d280200015a0013616c6c6f77735472616e7369656e74446174617872001d6f72672e71756172747a2e7574696c732e4469727479466c61674d617013e62ead28760ace0200025a000564697274794c00036d617074000f4c6a6176612f7574696c2f4d61703b787001737200116a6176612e7574696c2e486173684d61700507dac1c31660d103000246000a6c6f6164466163746f724900097468726573686f6c6478703f4000000000000c7708000000100000000174000564622d6964737200116a6176612e6c616e672e496e746567657212e2a0a4f781873802000149000576616c7565787200106a6176612e6c616e672e4e756d62657286ac951d0b94e08b0200007870000000227800');
 
 
 INSERT INTO "public"."qrtz_triggers" ("sched_name",
@@ -12826,7 +12751,7 @@ INSERT INTO "public"."qrtz_triggers" ("sched_name",
                                       "calendar_name",
                                       "misfire_instr",
                                       "job_data")
-VALUES ('MetabaseScheduler', 'metabase.task.send-pulses.trigger', 'DEFAULT', 'metabase.task.send-pulses.job', 'DEFAULT', NULL, 1586350800000, 1586347200000, 5, 'WAITING', 'CRON', 1585304463000, 0, NULL, 1, '\x');
+VALUES ('MetabaseScheduler', 'metabase.task.send-pulses.trigger', 'DEFAULT', 'metabase.task.send-pulses.job', 'DEFAULT', NULL, 1586930400000, 1586926800000, 5, 'WAITING', 'CRON', 1586870263000, 0, NULL, 1, '\x');
 
 
 INSERT INTO "public"."qrtz_triggers" ("sched_name",
@@ -12845,7 +12770,7 @@ INSERT INTO "public"."qrtz_triggers" ("sched_name",
                                       "calendar_name",
                                       "misfire_instr",
                                       "job_data")
-VALUES ('MetabaseScheduler', 'metabase.task.sync-and-analyze.trigger.34', 'DEFAULT', 'metabase.task.sync-and-analyze.job', 'DEFAULT', 'sync-and-analyze Database 34', 1586350800000, 1586347200000, 5, 'WAITING', 'CRON', 1585304463000, 0, NULL, 2, '\xaced0005737200156f72672e71756172747a2e4a6f62446174614d61709fb083e8bfa9b0cb020000787200266f72672e71756172747a2e7574696c732e537472696e674b65794469727479466c61674d61708208e8c3fbc55d280200015a0013616c6c6f77735472616e7369656e74446174617872001d6f72672e71756172747a2e7574696c732e4469727479466c61674d617013e62ead28760ace0200025a000564697274794c00036d617074000f4c6a6176612f7574696c2f4d61703b787001737200116a6176612e7574696c2e486173684d61700507dac1c31660d103000246000a6c6f6164466163746f724900097468726573686f6c6478703f4000000000000c7708000000100000000174000564622d6964737200116a6176612e6c616e672e496e746567657212e2a0a4f781873802000149000576616c7565787200106a6176612e6c616e672e4e756d62657286ac951d0b94e08b0200007870000000227800');
+VALUES ('MetabaseScheduler', 'metabase.task.task-history-cleanup.trigger', 'DEFAULT', 'metabase.task.task-history-cleanup.job', 'DEFAULT', NULL, 1586930400000, 1586926800000, 5, 'WAITING', 'CRON', 1586870263000, 0, NULL, 0, '\x');
 
 
 INSERT INTO "public"."qrtz_triggers" ("sched_name",
@@ -12864,7 +12789,7 @@ INSERT INTO "public"."qrtz_triggers" ("sched_name",
                                       "calendar_name",
                                       "misfire_instr",
                                       "job_data")
-VALUES ('MetabaseScheduler', 'metabase.task.upgrade-checks.trigger', 'DEFAULT', 'metabase.task.upgrade-checks.job', 'DEFAULT', NULL, 1586362500000, 1586319300000, 5, 'WAITING', 'CRON', 1585304463000, 0, NULL, 0, '\x');
+VALUES ('MetabaseScheduler', 'metabase.task.sync-and-analyze.trigger.34', 'DEFAULT', 'metabase.task.sync-and-analyze.job', 'DEFAULT', 'sync-and-analyze Database 34', 1586930400000, 1586926800000, 5, 'WAITING', 'CRON', 1586870263000, 0, NULL, 2, '\xaced0005737200156f72672e71756172747a2e4a6f62446174614d61709fb083e8bfa9b0cb020000787200266f72672e71756172747a2e7574696c732e537472696e674b65794469727479466c61674d61708208e8c3fbc55d280200015a0013616c6c6f77735472616e7369656e74446174617872001d6f72672e71756172747a2e7574696c732e4469727479466c61674d617013e62ead28760ace0200025a000564697274794c00036d617074000f4c6a6176612f7574696c2f4d61703b787001737200116a6176612e7574696c2e486173684d61700507dac1c31660d103000246000a6c6f6164466163746f724900097468726573686f6c6478703f4000000000000c7708000000100000000174000564622d6964737200116a6176612e6c616e672e496e746567657212e2a0a4f781873802000149000576616c7565787200106a6176612e6c616e672e4e756d62657286ac951d0b94e08b0200007870000000227800');
 
 
 INSERT INTO "public"."qrtz_triggers" ("sched_name",
@@ -12883,7 +12808,7 @@ INSERT INTO "public"."qrtz_triggers" ("sched_name",
                                       "calendar_name",
                                       "misfire_instr",
                                       "job_data")
-VALUES ('MetabaseScheduler', 'metabase.task.abandonment-emails.trigger', 'DEFAULT', 'metabase.task.abandonment-emails.job', 'DEFAULT', NULL, 1586426400000, 1586340000000, 5, 'WAITING', 'CRON', 1585304463000, 0, NULL, 0, '\x');
+VALUES ('MetabaseScheduler', 'metabase.task.anonymous-stats.trigger', 'DEFAULT', 'metabase.task.anonymous-stats.job', 'DEFAULT', NULL, 1587014100000, 1586927700000, 5, 'WAITING', 'CRON', 1586870263000, 0, NULL, 0, '\x');
 
 
 INSERT INTO "public"."qrtz_triggers" ("sched_name",
@@ -12902,7 +12827,7 @@ INSERT INTO "public"."qrtz_triggers" ("sched_name",
                                       "calendar_name",
                                       "misfire_instr",
                                       "job_data")
-VALUES ('MetabaseScheduler', 'metabase.task.update-field-values.trigger.34', 'DEFAULT', 'metabase.task.update-field-values.job', 'DEFAULT', 'update-field-values Database 34', 1586383200000, 1586296800000, 5, 'WAITING', 'CRON', 1585304463000, 0, NULL, 2, '\xaced0005737200156f72672e71756172747a2e4a6f62446174614d61709fb083e8bfa9b0cb020000787200266f72672e71756172747a2e7574696c732e537472696e674b65794469727479466c61674d61708208e8c3fbc55d280200015a0013616c6c6f77735472616e7369656e74446174617872001d6f72672e71756172747a2e7574696c732e4469727479466c61674d617013e62ead28760ace0200025a000564697274794c00036d617074000f4c6a6176612f7574696c2f4d61703b787001737200116a6176612e7574696c2e486173684d61700507dac1c31660d103000246000a6c6f6164466163746f724900097468726573686f6c6478703f4000000000000c7708000000100000000174000564622d6964737200116a6176612e6c616e672e496e746567657212e2a0a4f781873802000149000576616c7565787200106a6176612e6c616e672e4e756d62657286ac951d0b94e08b0200007870000000227800');
+VALUES ('MetabaseScheduler', 'metabase.task.abandonment-emails.trigger', 'DEFAULT', 'metabase.task.abandonment-emails.job', 'DEFAULT', NULL, 1586944800000, -1, 5, 'WAITING', 'CRON', 1586870263000, 0, NULL, 0, '\x');
 
 
 INSERT INTO "public"."qrtz_triggers" ("sched_name",
@@ -12921,7 +12846,7 @@ INSERT INTO "public"."qrtz_triggers" ("sched_name",
                                       "calendar_name",
                                       "misfire_instr",
                                       "job_data")
-VALUES ('MetabaseScheduler', 'metabase.task.task-history-cleanup.trigger', 'DEFAULT', 'metabase.task.task-history-cleanup.job', 'DEFAULT', NULL, 1586350800000, 1586347200000, 5, 'WAITING', 'CRON', 1585304464000, 0, NULL, 0, '\x');
+VALUES ('MetabaseScheduler', 'metabase.task.follow-up-emails.trigger', 'DEFAULT', 'metabase.task.follow-up-emails.job', 'DEFAULT', NULL, 1586944800000, -1, 5, 'WAITING', 'CRON', 1586870263000, 0, NULL, 0, '\x');
 
 --
 -- Data for Name: query; Type: TABLE DATA; Schema: public; Owner: metabase
@@ -16080,6 +16005,22 @@ INSERT INTO "public"."query_execution" ("id",
                                         "dashboard_id",
                                         "pulse_id",
                                         "database_id")
+VALUES (334, '\x5390498e8f8f76da7e849a96b3fd51b39573584a6e97bb4e366a7098563b941b', '2020-03-25 15:06:54.694967', 379, 3, FALSE, 'question', NULL, 2, 8, NULL, NULL, 34);
+
+
+INSERT INTO "public"."query_execution" ("id",
+                                        "hash",
+                                        "started_at",
+                                        "running_time",
+                                        "result_rows",
+                                        "native",
+                                        "context",
+                                        "error",
+                                        "executor_id",
+                                        "card_id",
+                                        "dashboard_id",
+                                        "pulse_id",
+                                        "database_id")
 VALUES (73, '\xc5cd859ee85ff7179fcd5ef970359ac1532a5eac806cbd3be15f4980bbd03f70', '2020-03-23 06:40:57.031781', 31732, 0, FALSE, 'question', 'Connections could not be acquired from the underlying database!', 1, 2, NULL, NULL, 34);
 
 
@@ -17138,6 +17079,22 @@ INSERT INTO "public"."query_execution" ("id",
                                         "database_id")
 VALUES (292, '\x44bb062b6bdbaa244ef27aaa874f94747981b6fc381c004e09518a4ff2b15451', '2020-03-25 15:00:34.135283', 1668, 0, FALSE, 'question', 'ERROR: duplicate key value violates unique constraint "query_execution_pkey"
   Detail: Key (id)=(276) already exists.', 2, 3, NULL, NULL, 34);
+
+
+INSERT INTO "public"."query_execution" ("id",
+                                        "hash",
+                                        "started_at",
+                                        "running_time",
+                                        "result_rows",
+                                        "native",
+                                        "context",
+                                        "error",
+                                        "executor_id",
+                                        "card_id",
+                                        "dashboard_id",
+                                        "pulse_id",
+                                        "database_id")
+VALUES (336, '\xfe7ef9d60ae79fb73087fc9e3c0359eb7f5eace2a67471d23a089bd9b3eabf45', '2020-03-25 15:06:54.798301', 491, 195, FALSE, 'question', NULL, 2, 6, NULL, NULL, 34);
 
 
 INSERT INTO "public"."query_execution" ("id",
@@ -18229,38 +18186,6 @@ INSERT INTO "public"."query_execution" ("id",
                                         "pulse_id",
                                         "database_id")
 VALUES (332, '\xd126c090e18477525400999bd1d70cbdd7dc023d0e4b084dc43927f429c2e2d3', '2020-03-25 15:06:39.008929', 934, 113, FALSE, 'question', NULL, 2, 4, NULL, NULL, 34);
-
-
-INSERT INTO "public"."query_execution" ("id",
-                                        "hash",
-                                        "started_at",
-                                        "running_time",
-                                        "result_rows",
-                                        "native",
-                                        "context",
-                                        "error",
-                                        "executor_id",
-                                        "card_id",
-                                        "dashboard_id",
-                                        "pulse_id",
-                                        "database_id")
-VALUES (334, '\x5390498e8f8f76da7e849a96b3fd51b39573584a6e97bb4e366a7098563b941b', '2020-03-25 15:06:54.694967', 379, 3, FALSE, 'question', NULL, 2, 8, NULL, NULL, 34);
-
-
-INSERT INTO "public"."query_execution" ("id",
-                                        "hash",
-                                        "started_at",
-                                        "running_time",
-                                        "result_rows",
-                                        "native",
-                                        "context",
-                                        "error",
-                                        "executor_id",
-                                        "card_id",
-                                        "dashboard_id",
-                                        "pulse_id",
-                                        "database_id")
-VALUES (336, '\xfe7ef9d60ae79fb73087fc9e3c0359eb7f5eace2a67471d23a089bd9b3eabf45', '2020-03-25 15:06:54.798301', 491, 195, FALSE, 'question', NULL, 2, 6, NULL, NULL, 34);
 
 
 INSERT INTO "public"."query_execution" ("id",
@@ -35361,15 +35286,6 @@ VALUES (1328, '\x59ed3bf858039b9a34cc91b6d320a449f59f75634e02a1f13deb15b130a34e8
 SELECT pg_catalog.setval('"public"."query_execution_id_seq"', 1339, TRUE);
 
 --
--- Data for Name: query_queryexecution; Type: TABLE DATA; Schema: public; Owner: metabase
---
- --
--- Name: query_queryexecution_id_seq; Type: SEQUENCE SET; Schema: public; Owner: metabase
---
-
-SELECT pg_catalog.setval('"public"."query_queryexecution_id_seq"', 1, FALSE);
-
---
 -- Data for Name: report_card; Type: TABLE DATA; Schema: public; Owner: metabase
 --
 
@@ -36121,6 +36037,18 @@ INSERT INTO "public"."revision" ("id",
                                  "is_reversion",
                                  "is_creation",
                                  "message")
+VALUES (59, 'Dashboard', 1, 1, '2020-03-20 09:26:34.715304+01', '{"description":null,"name":"Sessions Dashboard","cards":[{"sizeX":4,"sizeY":4,"row":0,"col":5,"id":1,"card_id":2,"series":[]},{"sizeX":4,"sizeY":4,"row":0,"col":0,"id":2,"card_id":3,"series":[]},{"sizeX":4,"sizeY":4,"row":4,"col":5,"id":3,"card_id":4,"series":[]},{"sizeX":4,"sizeY":4,"row":0,"col":10,"id":9,"card_id":11,"series":[]},{"sizeX":4,"sizeY":4,"row":4,"col":10,"id":10,"card_id":12,"series":[]}]}', FALSE, FALSE, NULL);
+
+
+INSERT INTO "public"."revision" ("id",
+                                 "model",
+                                 "model_id",
+                                 "user_id",
+                                 "timestamp",
+                                 "object",
+                                 "is_reversion",
+                                 "is_creation",
+                                 "message")
 VALUES (83, 'Card', 12, 2, '2020-03-25 15:04:29.252194+01', '{"description":"All sessions with more than 70% of risks answered","archived":false,"collection_position":null,"table_id":58,"database_id":34,"enable_embedding":false,"collection_id":3,"query_type":"query","name":"Top Sessions","read_permissions":null,"creator_id":1,"made_public_by_id":null,"embedding_params":null,"cache_ttl":null,"dataset_query":{"database":34,"query":{"source-table":58,"filter":[">",["field-id",237],70],"fields":[["field-id",237],["field-id",238]],"order-by":[["desc",["field-id",237]]]},"type":"query"},"id":12,"display":"table","visualization_settings":{"table.columns":[{"name":"title","fieldRef":["field-id",245],"enabled":true},{"name":"zodb_path","fieldRef":["field-id",243],"enabled":true},{"name":"report_comment","fieldRef":["field-id",241],"enabled":true},{"name":"archived","fieldRef":["field-id",248],"enabled":true},{"name":"completion_percentage","fieldRef":["field-id",237],"enabled":true},{"name":"brand","fieldRef":["field-id",247],"enabled":true},{"name":"created","fieldRef":["field-id",238],"enabled":true},{"name":"modified","fieldRef":["field-id",244],"enabled":true},{"name":"published","fieldRef":["field-id",252],"enabled":true},{"name":"refreshed","fieldRef":["field-id",249],"enabled":true}],"table.pivot_column":"archived","table.cell_column":"completion_percentage"},"public_uuid":null}', FALSE, FALSE, NULL);
 
 
@@ -36253,6 +36181,18 @@ INSERT INTO "public"."revision" ("id",
                                  "is_reversion",
                                  "is_creation",
                                  "message")
+VALUES (60, 'Dashboard', 1, 1, '2020-03-20 09:26:34.789436+01', '{"description":null,"name":"Sessions Dashboard","cards":[{"sizeX":4,"sizeY":4,"row":0,"col":5,"id":1,"card_id":2,"series":[]},{"sizeX":4,"sizeY":4,"row":0,"col":0,"id":2,"card_id":3,"series":[]},{"sizeX":4,"sizeY":4,"row":4,"col":5,"id":3,"card_id":4,"series":[]},{"sizeX":4,"sizeY":4,"row":0,"col":10,"id":9,"card_id":11,"series":[]},{"sizeX":4,"sizeY":4,"row":4,"col":10,"id":10,"card_id":12,"series":[]}]}', FALSE, FALSE, NULL);
+
+
+INSERT INTO "public"."revision" ("id",
+                                 "model",
+                                 "model_id",
+                                 "user_id",
+                                 "timestamp",
+                                 "object",
+                                 "is_reversion",
+                                 "is_creation",
+                                 "message")
 VALUES (49, 'Card', 11, 1, '2020-03-19 14:31:36.2+01', '{"description":"Number of sessions grouped by completion: top (more than 70% of risks answered), average (more than 10%) and low (less than 10%)","archived":false,"collection_position":null,"table_id":null,"database_id":34,"enable_embedding":false,"collection_id":3,"query_type":"native","name":"Completion of sessions","read_permissions":null,"creator_id":1,"made_public_by_id":null,"embedding_params":null,"cache_ttl":null,"dataset_query":{"type":"native","native":{"query":"select (case when completion_percentage > 70 then ''top (>70%)'' when completion_percentage >= 10 and completion_percentage < 70 then ''avg (10%-70%)'' when completion_percentage < 10 then ''low (<10%)'' end) as completion, count(\n*) from session where completion_percentage is not null group by completion order by min(completion_percentage) desc;"},"database":34},"id":11,"display":"bar","visualization_settings":{"graph.dimensions":["completion"],"graph.metrics":["count"],"stackable.stack_type":"stacked","stackable.stack_display":"bar","graph.label_value_formatting":"auto","graph.show_values":true},"public_uuid":null}', FALSE, TRUE, NULL);
 
 
@@ -36338,30 +36278,6 @@ INSERT INTO "public"."revision" ("id",
                                  "is_creation",
                                  "message")
 VALUES (58, 'Dashboard', 1, 1, '2020-03-20 09:26:34.4585+01', '{"description":null,"name":"Sessions Dashboard","cards":[{"sizeX":4,"sizeY":4,"row":0,"col":5,"id":1,"card_id":2,"series":[]},{"sizeX":4,"sizeY":4,"row":0,"col":0,"id":2,"card_id":3,"series":[]},{"sizeX":4,"sizeY":4,"row":4,"col":5,"id":3,"card_id":4,"series":[]},{"sizeX":4,"sizeY":4,"row":0,"col":10,"id":9,"card_id":11,"series":[]},{"sizeX":2,"sizeY":2,"row":0,"col":0,"id":10,"card_id":12,"series":[]}]}', FALSE, FALSE, NULL);
-
-
-INSERT INTO "public"."revision" ("id",
-                                 "model",
-                                 "model_id",
-                                 "user_id",
-                                 "timestamp",
-                                 "object",
-                                 "is_reversion",
-                                 "is_creation",
-                                 "message")
-VALUES (59, 'Dashboard', 1, 1, '2020-03-20 09:26:34.715304+01', '{"description":null,"name":"Sessions Dashboard","cards":[{"sizeX":4,"sizeY":4,"row":0,"col":5,"id":1,"card_id":2,"series":[]},{"sizeX":4,"sizeY":4,"row":0,"col":0,"id":2,"card_id":3,"series":[]},{"sizeX":4,"sizeY":4,"row":4,"col":5,"id":3,"card_id":4,"series":[]},{"sizeX":4,"sizeY":4,"row":0,"col":10,"id":9,"card_id":11,"series":[]},{"sizeX":4,"sizeY":4,"row":4,"col":10,"id":10,"card_id":12,"series":[]}]}', FALSE, FALSE, NULL);
-
-
-INSERT INTO "public"."revision" ("id",
-                                 "model",
-                                 "model_id",
-                                 "user_id",
-                                 "timestamp",
-                                 "object",
-                                 "is_reversion",
-                                 "is_creation",
-                                 "message")
-VALUES (60, 'Dashboard', 1, 1, '2020-03-20 09:26:34.789436+01', '{"description":null,"name":"Sessions Dashboard","cards":[{"sizeX":4,"sizeY":4,"row":0,"col":5,"id":1,"card_id":2,"series":[]},{"sizeX":4,"sizeY":4,"row":0,"col":0,"id":2,"card_id":3,"series":[]},{"sizeX":4,"sizeY":4,"row":4,"col":5,"id":3,"card_id":4,"series":[]},{"sizeX":4,"sizeY":4,"row":0,"col":10,"id":9,"card_id":11,"series":[]},{"sizeX":4,"sizeY":4,"row":4,"col":10,"id":10,"card_id":12,"series":[]}]}', FALSE, FALSE, NULL);
 
 
 INSERT INTO "public"."revision" ("id",
@@ -36901,6 +36817,18 @@ INSERT INTO "public"."revision" ("id",
                                  "is_reversion",
                                  "is_creation",
                                  "message")
+VALUES (141, 'Card', 8, 2, '2020-03-26 13:06:13.479239+01', '{"description":"Total number of full, guest and converted user accounts","archived":false,"collection_position":null,"table_id":43,"database_id":34,"enable_embedding":false,"collection_id":4,"query_type":"query","name":"Accumulated Accounts per Type","read_permissions":null,"creator_id":1,"made_public_by_id":null,"embedding_params":null,"cache_ttl":null,"dataset_query":{"database":34,"query":{"source-table":43,"aggregation":[["count"]],"breakout":[["field-id",157]]},"type":"query"},"id":8,"display":"pie","visualization_settings":{"pie.show_legend":true,"pie.show_legend_perecent":true,"pie.colors":{"converted":"#98D9D9","full":"#7172AD","guest":"#F9D45C"}},"public_uuid":null}', FALSE, FALSE, NULL);
+
+
+INSERT INTO "public"."revision" ("id",
+                                 "model",
+                                 "model_id",
+                                 "user_id",
+                                 "timestamp",
+                                 "object",
+                                 "is_reversion",
+                                 "is_creation",
+                                 "message")
 VALUES (117, 'Card', 7, 2, '2020-03-26 11:21:44.084065+01', '{"description":"Accumulated number of accounts per month (created in or before the given month), grouped by account type","archived":false,"collection_position":null,"table_id":43,"database_id":34,"enable_embedding":false,"collection_id":4,"query_type":"query","name":"Accumulated Accounts per Month","read_permissions":null,"creator_id":1,"made_public_by_id":null,"embedding_params":null,"cache_ttl":null,"dataset_query":{"type":"query","query":{"source-table":43,"aggregation":[["cum-count"]],"breakout":[["datetime-field",["field-id",153],"month"],["field-id",157]]},"database":34},"id":7,"display":"line","visualization_settings":{"graph.show_trendline":true,"graph.y_axis.title_text":"Accumulated Number of Accounts","graph.show_values":true,"stackable.stack_display":"bar","graph.x_axis.title_text":"Date","graph.metrics":["count"],"graph.label_value_formatting":"auto","series_settings":{"guest":{"color":"#F9D45C"}},"graph.dimensions":["created","account_type"],"stackable.stack_type":null},"public_uuid":null}', FALSE, FALSE, NULL);
 
 
@@ -37165,18 +37093,6 @@ INSERT INTO "public"."revision" ("id",
                                  "is_reversion",
                                  "is_creation",
                                  "message")
-VALUES (141, 'Card', 8, 2, '2020-03-26 13:06:13.479239+01', '{"description":"Total number of full, guest and converted user accounts","archived":false,"collection_position":null,"table_id":43,"database_id":34,"enable_embedding":false,"collection_id":4,"query_type":"query","name":"Accumulated Accounts per Type","read_permissions":null,"creator_id":1,"made_public_by_id":null,"embedding_params":null,"cache_ttl":null,"dataset_query":{"database":34,"query":{"source-table":43,"aggregation":[["count"]],"breakout":[["field-id",157]]},"type":"query"},"id":8,"display":"pie","visualization_settings":{"pie.show_legend":true,"pie.show_legend_perecent":true,"pie.colors":{"converted":"#98D9D9","full":"#7172AD","guest":"#F9D45C"}},"public_uuid":null}', FALSE, FALSE, NULL);
-
-
-INSERT INTO "public"."revision" ("id",
-                                 "model",
-                                 "model_id",
-                                 "user_id",
-                                 "timestamp",
-                                 "object",
-                                 "is_reversion",
-                                 "is_creation",
-                                 "message")
 VALUES (146, 'Card', 6, 2, '2020-03-26 17:25:36.657483+01', '{"description":"Number of accounts created in the given month, grouped by account type","archived":false,"collection_position":null,"table_id":43,"database_id":34,"enable_embedding":false,"collection_id":4,"query_type":"query","name":"Accounts Created per Month","read_permissions":null,"creator_id":1,"made_public_by_id":null,"embedding_params":null,"cache_ttl":null,"dataset_query":{"type":"query","query":{"source-table":43,"aggregation":[["count"]],"breakout":[["datetime-field",["field-id",298],"month"],["field-id",157]]},"database":34},"id":6,"display":"bar","visualization_settings":{"graph.show_goal":false,"graph.show_trendline":true,"graph.y_axis.title_text":"Number of Accounts Created","graph.show_values":true,"stackable.stack_display":"bar","graph.x_axis.title_text":"Creation Date","graph.metrics":["count"],"graph.label_value_formatting":"auto","series_settings":{"guest":{"color":"#F9D45C"}},"graph.dimensions":["creation_date","account_type"],"stackable.stack_type":null},"public_uuid":null}', FALSE, FALSE, NULL);
 
 
@@ -37410,17 +37326,17 @@ VALUES ('show-homepage-xrays', 'false');
 
 INSERT INTO "public"."setting" ("key",
                                 "value")
-VALUES ('version-info', '{"latest":{"version":"v0.35.1","released":"2020-04-02T21:52:06.867Z","patch":true,"highlights":["Issue with date field filters after v0.35.0 upgrade","Unable to filter on manually JOINed table"]},"older":[{"version":"v0.35.0","released":"2020-03-25T18:29:17.286Z","patch":false,"highlights":["Filter expressions, string extracts, and more","Reference saved questions in your SQL queries","Performance improvements"]},{"version":"v0.34.3","released":"2020-02-25T20:47:03.897Z","patch":true,"highlights":["Line, area, bar, combo, and scatter charts now allow a maximum of 100 series instead of 20.","Chart labels now have more options to show significant decimal values.","Various bug fixes"]},{"version":"v0.34.2","released":"2020-02-05T22:02:15.277Z","patch":true,"highlights":["Various bug fixes"]},{"version":"v0.34.1","released":"2020-01-14T00:02:42.489Z","patch":true,"highlights":["Various bug fixes"]},{"version":"v0.34.0","released":"2019-12-20T01:21:39.568Z","patch":false,"highlights":["Added support for variables and field filters in native Mongo queries","Added option to display data values on Line, Bar, and Area charts","Many Timezone fixes"]},{"version":"v0.33.7.3","released":"2019-12-17T01:45:45.720Z","patch":true,"highlights":["Important security fix for Google Auth login"]},{"version":"v0.33.7","released":"2019-12-13T20:35:14.667Z","patch":true,"highlights":["Important security fix for Google Auth login"]},{"version":"v0.33.6","released":"2019-11-19T20:35:14.667Z","patch":true,"highlights":["Fixed regression that could cause saved questions to fail to render (#11297)","Fixed regression where No Results icon didn''t show (#11282)","Pie chart visual improvements (#10837)"]},{"version":"v0.33.5","released":"2019-11-08T20:35:14.667Z","patch":true,"highlights":["Added Slovak translation","Fixed support for MySQL 8 with the default authentication method","Fixed issues with X-axis label formatting in timeseries charts"]},{"version":"v0.33.4","released":"2019-10-08T20:35:14.667Z","patch":true,"highlights":["Custom expression support for joined columns","Fixed issue with filtering by month-of-year in MongoDB","Misc Bug Fixes"]},{"version":"v0.33.3","released":"2019-09-20T08:09:36.358Z","patch":true,"highlights":["Chinese and Persian translations now available again","Misc Bug Fixes "]},{"version":"v0.33.2","released":"2019-09-04T08:09:36.358Z","patch":true,"highlights":["Fixed Cards not saving","Fixed searrch not working "]},{"version":"v0.33.1","released":"2019-09-04T08:09:36.358Z","patch":true,"highlights":["Fixed conditional formatting not working","Fixed an issue where some previously saved column settings were not applied ","Fixed an issue where pulses were not loading "]},{"version":"v0.33.0","released":"2019-08-19T08:09:36.358Z","patch":false,"highlights":["Notebook mode + Simple Query Mode","Joins","Post Aggregation filters"]},{"version":"v0.32.10","released":"2019-07-28T08:09:36.358Z","patch":true,"highlights":["Fix User can''t logout / gets automatically logged in.","Fix No data displayed when pivoting data","Fixed Dashboard Filters on Linked Entities Broke"]},{"version":"v0.32.9","released":"2019-06-14T08:09:36.358Z","patch":true,"highlights":["Fix issues connecting to MongoDB Atlas Cluster","Fix database addition on setup","Fixed numeric category error with Postgres"]},{"version":"v0.32.8","released":"2019-05-13T08:09:36.358Z","patch":true,"highlights":["Fix i18n"]},{"version":"v0.32.7","released":"2019-05-09T08:09:36.358Z","patch":true,"highlights":["Fix published SHA Hash"]},{"version":"v0.32.6","released":"2019-05-08T12:09:36.358Z","patch":true,"highlights":["Fixed regression where Dashboards would fail to fully populate","Performance improvements when running queries","Security improvements"]},{"version":"v0.32.5","released":"2019-04-20T12:09:36.358Z","patch":true,"highlights":["Improve long-running query handling","Fix H2 to MySQL/Postgres migration issue","Fix issue with embedded maps with custom GeoJSON"]},{"version":"v0.32.4","released":"2019-04-09T12:09:36.358Z","patch":true,"highlights":["Fix issue where Google Auth login did not work","FFix issue where Google Auth login did not work"]},{"version":"v0.32.3","released":"2019-04-08T12:09:36.358Z","patch":true,"highlights":["Fixed Snowflake connection issues","Fixed Dashboard copy","Fixed non-root context logins"]},{"version":"v0.32.2","released":"2019-04-03T12:09:36.358Z","patch":true,"highlights":["Fixed dashboard date filters ","Fixed SSL error using Quartz w/ MySQL","Fix colors in dashboards"]},{"version":"v0.32.1","released":"2019-03-29T12:09:36.358Z","patch":true,"highlights":["Fixed MySQL connections with SSL","Fixed table sync issue"]},{"version":"v0.32.0","released":"2019-03-28T12:09:36.358Z","patch":false,"highlights":["Modular Drivers (reducing memory consumption)","Async queries (improving responsiveness)","Reduced memory consumption."]},{"version":"v0.31.2","released":"2018-12-07T12:09:36.358Z","patch":true,"highlights":["Added German translation","Fixed Heroku out-of-memory errors","Fixed issue with Slack-based Pulses due to rate limiting."]},{"version":"v0.31.1","released":"2018-11-21T12:09:36.358Z","patch":true,"highlights":["Ability to clone dashboards","Faster startup time and lower memory consumption","Migration issue fixes."]},{"version":"v0.31.0","released":"2018-11-08T12:09:36.358Z","patch":false,"highlights":["New visualizations and combo charts","Granular formatting controls","Snowflake Support"]},{"version":"v0.30.4","released":"2018-09-27T12:09:36.358Z","patch":true,"highlights":["Metabase fails to launch in Chinese","Fix token status checking","Fix BigQuery SQL parameters with encrypted DB details"]},{"version":"v0.30.3","released":"2018-09-13T12:09:36.358Z","patch":true,"highlights":["Localization for Chinese, Japanese, Turkish, Persian","Self referencing FK leads to exception","Security improvements"]},{"version":"v0.30.2","released":"2018-09-06T12:09:36.358Z","patch":true,"highlights":["Localization for French + Norwegian","Stability fixes for HTTP/2"]},{"version":"v0.30.1","released":"2018-08-08T12:09:36.358Z","patch":true,"highlights":["Localization for Portuguese","Timezone fix","SQL Template tag re-ordering fix"]},{"version":"v0.30.0","released":"2018-08-08T12:09:36.358Z","patch":false,"highlights":["App wide search","Enhanced Collection permissions","Comparison X-Rays"]},{"version":"v0.29.3","released":"2018-05-12T12:09:36.358Z","patch":true,"highlights":["Fix X-ray rules loading on Oracle JVM 8"]},{"version":"v0.29.2","released":"2018-05-10T12:09:36.358Z","patch":true,"highlights":["Fix Spark Driver"]},{"version":"v0.29.1","released":"2018-05-10T11:09:36.358Z","patch":true,"highlights":["Better heroku memory consumption","Fixed X-Ray Bugs","Drill through from line chart selects wrong date"]},{"version":"v0.29.0","released":"2018-05-01T11:09:36.358Z","patch":false,"highlights":["New and Improved X-Rays","Search field values","Spark SQL Support"]},{"version":"v0.28.6","released":"2018-04-12T11:09:36.358Z","patch":true,"highlights":["Fix chart rendering in pulses"]},{"version":"v0.28.5","released":"2018-04-04T11:09:36.358Z","patch":true,"highlights":["Fix memory consumption for SQL templates","Fix public dashboards parameter validation","Fix Unable to add cards to dashboards or search for cards, StackOverflowError on backend"]},{"version":"v0.28.4","released":"2018-03-29T11:09:36.358Z","patch":true,"highlights":["Fix broken embedded dashboards","Fix migration regression","Fix input typing bug"]},{"version":"v0.28.3","released":"2018-03-23T11:09:36.358Z","patch":true,"highlights":["Security improvements"]},{"version":"v0.28.2","released":"2018-03-20T11:09:36.358Z","patch":true,"highlights":["Security improvements","Sort on custom and saved metrics","Performance improvements for large numbers of questions and dashboards"]},{"version":"v0.28.1","released":"2018-02-09T11:09:36.358Z","patch":true,"highlights":["Fix admin panel update string","Fix pulse rendering bug","Fix CSV & XLS download bug"]},{"version":"v0.28.0","released":"2018-02-07T11:09:36.358Z","patch":false,"highlights":["Text Cards in Dashboards","Pulse + Alert attachments","Performance Improvements"]},{"version":"v0.27.2","released":"2017-12-12T11:09:36.358Z","patch":true,"highlights":["Migration bug fix"]},{"version":"v0.27.1","released":"2017-12-01T11:09:36.358Z","patch":true,"highlights":["Migration bug fix","Apply filters to embedded downloads"]},{"version":"v0.27.0","released":"2017-11-27T11:09:36.358Z","patch":false,"highlights":["Alerts","X-Ray insights","Charting improvements"]},{"version":"v0.26.2","released":"2017-09-27T11:09:36.358Z","patch":true,"highlights":["Update Redshift Driver","Support Java 9","Fix performance issue with fields listing"]},{"version":"v0.26.1","released":"2017-09-27T11:09:36.358Z","patch":true,"highlights":["Fix migration issue on MySQL"]},{"version":"v0.26.0","released":"2017-09-26T11:09:36.358Z","patch":true,"highlights":["Segment + Metric X-Rays and Comparisons","Better control over metadata introspection process","Improved Timezone support and bug fixes"]},{"version":"v0.25.2","released":"2017-08-09T11:09:36.358Z","patch":true,"highlights":["Bug and performance fixes"]},{"version":"v0.25.1","released":"2017-07-27T11:09:36.358Z","patch":true,"highlights":["After upgrading to 0.25, unknown protocol error.","Don''t show saved questions in the permissions database lists","Elastic beanstalk upgrades broken in 0.25 "]},{"version":"v0.25.0","released":"2017-07-25T11:09:36.358Z","patch":false,"highlights":["Nested questions","Enum and custom remapping support","LDAP authentication support"]},{"version":"v0.24.2","released":"2017-06-01T11:09:36.358Z","patch":true,"highlights":["Misc Bug fixes"]},{"version":"v0.24.1","released":"2017-05-10T11:09:36.358Z","patch":true,"highlights":["Fix upgrades with MySQL/Mariadb"]},{"version":"v0.24.0","released":"2017-05-10T11:09:36.358Z","patch":false,"highlights":["Drill-through + Actions","Result Caching","Presto Driver"]},{"version":"v0.23.1","released":"2017-03-30T11:09:36.358Z","patch":true,"highlights":["Filter widgets for SQL Template Variables","Fix spurious startup error","Java 7 startup bug fixed"]},{"version":"v0.23.0","released":"2017-03-21T11:09:36.358Z","patch":false,"highlights":["Public links for cards + dashboards","Embedding cards + dashboards in other applications","Encryption of database credentials"]},{"version":"v0.22.2","released":"2017-01-10T11:09:36.358Z","patch":true,"highlights":["Fix startup on OpenJDK 7"]},{"version":"v0.22.1","released":"2017-01-10T11:09:36.358Z","patch":true,"highlights":["IMPORTANT: Closed a Collections Permissions security hole","Improved startup performance","Bug fixes"]},{"version":"v0.22.0","released":"2017-01-10T11:09:36.358Z","patch":false,"highlights":["Collections + Collections Permissions","Multiple Aggregations","Custom Expressions"]},{"version":"v0.21.1","released":"2016-12-08T11:09:36.358Z","patch":true,"highlights":["BigQuery bug fixes","Charting bug fixes"]},{"version":"v0.21.0","released":"2016-12-08T11:09:36.358Z","patch":false,"highlights":["Google Analytics Driver","Vertica Driver","Better Time + Date Filters"]},{"version":"v0.20.3","released":"2016-10-26T11:09:36.358Z","patch":true,"highlights":["Fix H2->MySQL/PostgreSQL migrations, part 2"]},{"version":"v0.20.2","released":"2016-10-25T11:09:36.358Z","patch":true,"highlights":["Support Oracle 10+11","Fix H2->MySQL/PostgreSQL migrations","Revision timestamp fix"]},{"version":"v0.20.1","released":"2016-10-18T11:09:36.358Z","patch":true,"highlights":["Lots of bug fixes"]},{"version":"v0.20.0","released":"2016-10-11T11:09:36.358Z","patch":false,"highlights":["Data access permissions","Oracle Driver","Charting improvements"]},{"version":"v0.19.3","released":"2016-08-12T11:09:36.358Z","patch":true,"highlights":["fix Dashboard editing header"]},{"version":"v0.19.2","released":"2016-08-10T11:09:36.358Z","patch":true,"highlights":["fix Dashboard chart titles","fix pin map saving"]},{"version":"v0.19.1","released":"2016-08-04T11:09:36.358Z","patch":true,"highlights":["fix Dashboard Filter Editing","fix CSV Download of SQL Templates","fix Metabot enabled toggle"]},{"version":"v0.19.0","released":"2016-08-01T21:09:36.358Z","patch":false,"highlights":["SSO via Google Accounts","SQL Templates","Better charting controls"]},{"version":"v0.18.1","released":"2016-06-29T21:09:36.358Z","patch":true,"highlights":["Fix for Hour of day sorting bug","Fix for Column ordering bug in BigQuery","Fix for Mongo charting bug"]},{"version":"v0.18.0","released":"2016-06-022T21:09:36.358Z","patch":false,"highlights":["Dashboard Filters","Crate.IO Support","Checklist for Metabase Admins","Converting Metabase Questions -> SQL"]},{"version":"v0.17.1","released":"2016-05-04T21:09:36.358Z","patch":true,"highlights":["Fix for Line chart ordering bug","Fix for Time granularity bugs"]},{"version":"v0.17.0","released":"2016-05-04T21:09:36.358Z","patch":false,"highlights":["Tags + Search for Saved Questions","Calculated columns","Faster Syncing of Metadata","Lots of database driver improvements and bug fixes"]},{"version":"v0.16.1","released":"2016-05-04T21:09:36.358Z","patch":true,"highlights":["Fixes for several time alignment issues (timezones)","Resolved problem with SQL Server db connections"]},{"version":"v0.16.0","released":"2016-05-04T21:09:36.358Z","patch":false,"highlights":["Fullscreen (and fabulous) Dashboards","Say hello to Metabot in Slack"]}]}');
-
-
-INSERT INTO "public"."setting" ("key",
-                                "value")
-VALUES ('settings-last-updated', '2020-04-08 06:15:00.676171+02');
-
-
-INSERT INTO "public"."setting" ("key",
-                                "value")
 VALUES ('show-homepage-data', 'false');
+
+
+INSERT INTO "public"."setting" ("key",
+                                "value")
+VALUES ('version-info', '{"latest":{"version":"v0.35.2","released":"2020-04-10T23:03:53.756Z","patch":true,"highlights":["Fix email and premium embedding settings","Fix table permissions for database without a schema","Fix \"Error reducing result rows\" error"]},"older":[{"version":"v0.35.1","released":"2020-04-02T21:52:06.867Z","patch":true,"highlights":["Issue with date field filters after v0.35.0 upgrade","Unable to filter on manually JOINed table"]},{"version":"v0.35.0","released":"2020-03-25T18:29:17.286Z","patch":false,"highlights":["Filter expressions, string extracts, and more","Reference saved questions in your SQL queries","Performance improvements"]},{"version":"v0.34.3","released":"2020-02-25T20:47:03.897Z","patch":true,"highlights":["Line, area, bar, combo, and scatter charts now allow a maximum of 100 series instead of 20.","Chart labels now have more options to show significant decimal values.","Various bug fixes"]},{"version":"v0.34.2","released":"2020-02-05T22:02:15.277Z","patch":true,"highlights":["Various bug fixes"]},{"version":"v0.34.1","released":"2020-01-14T00:02:42.489Z","patch":true,"highlights":["Various bug fixes"]},{"version":"v0.34.0","released":"2019-12-20T01:21:39.568Z","patch":false,"highlights":["Added support for variables and field filters in native Mongo queries","Added option to display data values on Line, Bar, and Area charts","Many Timezone fixes"]},{"version":"v0.33.7.3","released":"2019-12-17T01:45:45.720Z","patch":true,"highlights":["Important security fix for Google Auth login"]},{"version":"v0.33.7","released":"2019-12-13T20:35:14.667Z","patch":true,"highlights":["Important security fix for Google Auth login"]},{"version":"v0.33.6","released":"2019-11-19T20:35:14.667Z","patch":true,"highlights":["Fixed regression that could cause saved questions to fail to render (#11297)","Fixed regression where No Results icon didn''t show (#11282)","Pie chart visual improvements (#10837)"]},{"version":"v0.33.5","released":"2019-11-08T20:35:14.667Z","patch":true,"highlights":["Added Slovak translation","Fixed support for MySQL 8 with the default authentication method","Fixed issues with X-axis label formatting in timeseries charts"]},{"version":"v0.33.4","released":"2019-10-08T20:35:14.667Z","patch":true,"highlights":["Custom expression support for joined columns","Fixed issue with filtering by month-of-year in MongoDB","Misc Bug Fixes"]},{"version":"v0.33.3","released":"2019-09-20T08:09:36.358Z","patch":true,"highlights":["Chinese and Persian translations now available again","Misc Bug Fixes "]},{"version":"v0.33.2","released":"2019-09-04T08:09:36.358Z","patch":true,"highlights":["Fixed Cards not saving","Fixed searrch not working "]},{"version":"v0.33.1","released":"2019-09-04T08:09:36.358Z","patch":true,"highlights":["Fixed conditional formatting not working","Fixed an issue where some previously saved column settings were not applied ","Fixed an issue where pulses were not loading "]},{"version":"v0.33.0","released":"2019-08-19T08:09:36.358Z","patch":false,"highlights":["Notebook mode + Simple Query Mode","Joins","Post Aggregation filters"]},{"version":"v0.32.10","released":"2019-07-28T08:09:36.358Z","patch":true,"highlights":["Fix User can''t logout / gets automatically logged in.","Fix No data displayed when pivoting data","Fixed Dashboard Filters on Linked Entities Broke"]},{"version":"v0.32.9","released":"2019-06-14T08:09:36.358Z","patch":true,"highlights":["Fix issues connecting to MongoDB Atlas Cluster","Fix database addition on setup","Fixed numeric category error with Postgres"]},{"version":"v0.32.8","released":"2019-05-13T08:09:36.358Z","patch":true,"highlights":["Fix i18n"]},{"version":"v0.32.7","released":"2019-05-09T08:09:36.358Z","patch":true,"highlights":["Fix published SHA Hash"]},{"version":"v0.32.6","released":"2019-05-08T12:09:36.358Z","patch":true,"highlights":["Fixed regression where Dashboards would fail to fully populate","Performance improvements when running queries","Security improvements"]},{"version":"v0.32.5","released":"2019-04-20T12:09:36.358Z","patch":true,"highlights":["Improve long-running query handling","Fix H2 to MySQL/Postgres migration issue","Fix issue with embedded maps with custom GeoJSON"]},{"version":"v0.32.4","released":"2019-04-09T12:09:36.358Z","patch":true,"highlights":["Fix issue where Google Auth login did not work","FFix issue where Google Auth login did not work"]},{"version":"v0.32.3","released":"2019-04-08T12:09:36.358Z","patch":true,"highlights":["Fixed Snowflake connection issues","Fixed Dashboard copy","Fixed non-root context logins"]},{"version":"v0.32.2","released":"2019-04-03T12:09:36.358Z","patch":true,"highlights":["Fixed dashboard date filters ","Fixed SSL error using Quartz w/ MySQL","Fix colors in dashboards"]},{"version":"v0.32.1","released":"2019-03-29T12:09:36.358Z","patch":true,"highlights":["Fixed MySQL connections with SSL","Fixed table sync issue"]},{"version":"v0.32.0","released":"2019-03-28T12:09:36.358Z","patch":false,"highlights":["Modular Drivers (reducing memory consumption)","Async queries (improving responsiveness)","Reduced memory consumption."]},{"version":"v0.31.2","released":"2018-12-07T12:09:36.358Z","patch":true,"highlights":["Added German translation","Fixed Heroku out-of-memory errors","Fixed issue with Slack-based Pulses due to rate limiting."]},{"version":"v0.31.1","released":"2018-11-21T12:09:36.358Z","patch":true,"highlights":["Ability to clone dashboards","Faster startup time and lower memory consumption","Migration issue fixes."]},{"version":"v0.31.0","released":"2018-11-08T12:09:36.358Z","patch":false,"highlights":["New visualizations and combo charts","Granular formatting controls","Snowflake Support"]},{"version":"v0.30.4","released":"2018-09-27T12:09:36.358Z","patch":true,"highlights":["Metabase fails to launch in Chinese","Fix token status checking","Fix BigQuery SQL parameters with encrypted DB details"]},{"version":"v0.30.3","released":"2018-09-13T12:09:36.358Z","patch":true,"highlights":["Localization for Chinese, Japanese, Turkish, Persian","Self referencing FK leads to exception","Security improvements"]},{"version":"v0.30.2","released":"2018-09-06T12:09:36.358Z","patch":true,"highlights":["Localization for French + Norwegian","Stability fixes for HTTP/2"]},{"version":"v0.30.1","released":"2018-08-08T12:09:36.358Z","patch":true,"highlights":["Localization for Portuguese","Timezone fix","SQL Template tag re-ordering fix"]},{"version":"v0.30.0","released":"2018-08-08T12:09:36.358Z","patch":false,"highlights":["App wide search","Enhanced Collection permissions","Comparison X-Rays"]},{"version":"v0.29.3","released":"2018-05-12T12:09:36.358Z","patch":true,"highlights":["Fix X-ray rules loading on Oracle JVM 8"]},{"version":"v0.29.2","released":"2018-05-10T12:09:36.358Z","patch":true,"highlights":["Fix Spark Driver"]},{"version":"v0.29.1","released":"2018-05-10T11:09:36.358Z","patch":true,"highlights":["Better heroku memory consumption","Fixed X-Ray Bugs","Drill through from line chart selects wrong date"]},{"version":"v0.29.0","released":"2018-05-01T11:09:36.358Z","patch":false,"highlights":["New and Improved X-Rays","Search field values","Spark SQL Support"]},{"version":"v0.28.6","released":"2018-04-12T11:09:36.358Z","patch":true,"highlights":["Fix chart rendering in pulses"]},{"version":"v0.28.5","released":"2018-04-04T11:09:36.358Z","patch":true,"highlights":["Fix memory consumption for SQL templates","Fix public dashboards parameter validation","Fix Unable to add cards to dashboards or search for cards, StackOverflowError on backend"]},{"version":"v0.28.4","released":"2018-03-29T11:09:36.358Z","patch":true,"highlights":["Fix broken embedded dashboards","Fix migration regression","Fix input typing bug"]},{"version":"v0.28.3","released":"2018-03-23T11:09:36.358Z","patch":true,"highlights":["Security improvements"]},{"version":"v0.28.2","released":"2018-03-20T11:09:36.358Z","patch":true,"highlights":["Security improvements","Sort on custom and saved metrics","Performance improvements for large numbers of questions and dashboards"]},{"version":"v0.28.1","released":"2018-02-09T11:09:36.358Z","patch":true,"highlights":["Fix admin panel update string","Fix pulse rendering bug","Fix CSV & XLS download bug"]},{"version":"v0.28.0","released":"2018-02-07T11:09:36.358Z","patch":false,"highlights":["Text Cards in Dashboards","Pulse + Alert attachments","Performance Improvements"]},{"version":"v0.27.2","released":"2017-12-12T11:09:36.358Z","patch":true,"highlights":["Migration bug fix"]},{"version":"v0.27.1","released":"2017-12-01T11:09:36.358Z","patch":true,"highlights":["Migration bug fix","Apply filters to embedded downloads"]},{"version":"v0.27.0","released":"2017-11-27T11:09:36.358Z","patch":false,"highlights":["Alerts","X-Ray insights","Charting improvements"]},{"version":"v0.26.2","released":"2017-09-27T11:09:36.358Z","patch":true,"highlights":["Update Redshift Driver","Support Java 9","Fix performance issue with fields listing"]},{"version":"v0.26.1","released":"2017-09-27T11:09:36.358Z","patch":true,"highlights":["Fix migration issue on MySQL"]},{"version":"v0.26.0","released":"2017-09-26T11:09:36.358Z","patch":true,"highlights":["Segment + Metric X-Rays and Comparisons","Better control over metadata introspection process","Improved Timezone support and bug fixes"]},{"version":"v0.25.2","released":"2017-08-09T11:09:36.358Z","patch":true,"highlights":["Bug and performance fixes"]},{"version":"v0.25.1","released":"2017-07-27T11:09:36.358Z","patch":true,"highlights":["After upgrading to 0.25, unknown protocol error.","Don''t show saved questions in the permissions database lists","Elastic beanstalk upgrades broken in 0.25 "]},{"version":"v0.25.0","released":"2017-07-25T11:09:36.358Z","patch":false,"highlights":["Nested questions","Enum and custom remapping support","LDAP authentication support"]},{"version":"v0.24.2","released":"2017-06-01T11:09:36.358Z","patch":true,"highlights":["Misc Bug fixes"]},{"version":"v0.24.1","released":"2017-05-10T11:09:36.358Z","patch":true,"highlights":["Fix upgrades with MySQL/Mariadb"]},{"version":"v0.24.0","released":"2017-05-10T11:09:36.358Z","patch":false,"highlights":["Drill-through + Actions","Result Caching","Presto Driver"]},{"version":"v0.23.1","released":"2017-03-30T11:09:36.358Z","patch":true,"highlights":["Filter widgets for SQL Template Variables","Fix spurious startup error","Java 7 startup bug fixed"]},{"version":"v0.23.0","released":"2017-03-21T11:09:36.358Z","patch":false,"highlights":["Public links for cards + dashboards","Embedding cards + dashboards in other applications","Encryption of database credentials"]},{"version":"v0.22.2","released":"2017-01-10T11:09:36.358Z","patch":true,"highlights":["Fix startup on OpenJDK 7"]},{"version":"v0.22.1","released":"2017-01-10T11:09:36.358Z","patch":true,"highlights":["IMPORTANT: Closed a Collections Permissions security hole","Improved startup performance","Bug fixes"]},{"version":"v0.22.0","released":"2017-01-10T11:09:36.358Z","patch":false,"highlights":["Collections + Collections Permissions","Multiple Aggregations","Custom Expressions"]},{"version":"v0.21.1","released":"2016-12-08T11:09:36.358Z","patch":true,"highlights":["BigQuery bug fixes","Charting bug fixes"]},{"version":"v0.21.0","released":"2016-12-08T11:09:36.358Z","patch":false,"highlights":["Google Analytics Driver","Vertica Driver","Better Time + Date Filters"]},{"version":"v0.20.3","released":"2016-10-26T11:09:36.358Z","patch":true,"highlights":["Fix H2->MySQL/PostgreSQL migrations, part 2"]},{"version":"v0.20.2","released":"2016-10-25T11:09:36.358Z","patch":true,"highlights":["Support Oracle 10+11","Fix H2->MySQL/PostgreSQL migrations","Revision timestamp fix"]},{"version":"v0.20.1","released":"2016-10-18T11:09:36.358Z","patch":true,"highlights":["Lots of bug fixes"]},{"version":"v0.20.0","released":"2016-10-11T11:09:36.358Z","patch":false,"highlights":["Data access permissions","Oracle Driver","Charting improvements"]},{"version":"v0.19.3","released":"2016-08-12T11:09:36.358Z","patch":true,"highlights":["fix Dashboard editing header"]},{"version":"v0.19.2","released":"2016-08-10T11:09:36.358Z","patch":true,"highlights":["fix Dashboard chart titles","fix pin map saving"]},{"version":"v0.19.1","released":"2016-08-04T11:09:36.358Z","patch":true,"highlights":["fix Dashboard Filter Editing","fix CSV Download of SQL Templates","fix Metabot enabled toggle"]},{"version":"v0.19.0","released":"2016-08-01T21:09:36.358Z","patch":false,"highlights":["SSO via Google Accounts","SQL Templates","Better charting controls"]},{"version":"v0.18.1","released":"2016-06-29T21:09:36.358Z","patch":true,"highlights":["Fix for Hour of day sorting bug","Fix for Column ordering bug in BigQuery","Fix for Mongo charting bug"]},{"version":"v0.18.0","released":"2016-06-022T21:09:36.358Z","patch":false,"highlights":["Dashboard Filters","Crate.IO Support","Checklist for Metabase Admins","Converting Metabase Questions -> SQL"]},{"version":"v0.17.1","released":"2016-05-04T21:09:36.358Z","patch":true,"highlights":["Fix for Line chart ordering bug","Fix for Time granularity bugs"]},{"version":"v0.17.0","released":"2016-05-04T21:09:36.358Z","patch":false,"highlights":["Tags + Search for Saved Questions","Calculated columns","Faster Syncing of Metadata","Lots of database driver improvements and bug fixes"]},{"version":"v0.16.1","released":"2016-05-04T21:09:36.358Z","patch":true,"highlights":["Fixes for several time alignment issues (timezones)","Resolved problem with SQL Server db connections"]},{"version":"v0.16.0","released":"2016-05-04T21:09:36.358Z","patch":false,"highlights":["Fullscreen (and fabulous) Dashboards","Say hello to Metabot in Slack"]}]}');
+
+
+INSERT INTO "public"."setting" ("key",
+                                "value")
+VALUES ('settings-last-updated', '2020-04-15 06:15:01.338987+02');
 
 --
 -- Data for Name: task_history; Type: TABLE DATA; Schema: public; Owner: metabase
@@ -40403,6 +40319,16 @@ INSERT INTO "public"."task_history" ("id",
                                      "ended_at",
                                      "duration",
                                      "task_details")
+VALUES (515, 'send-pulses', NULL, '2020-03-21 07:00:00.174', '2020-03-21 07:00:00.177', 3, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
 VALUES (298, 'classify-tables', 33, '2020-03-20 20:53:00.998', '2020-03-20 20:53:01.007', 9, '{"total-tables":10,"tables-classified":0}');
 
 
@@ -41133,6 +41059,16 @@ INSERT INTO "public"."task_history" ("id",
                                      "ended_at",
                                      "duration",
                                      "task_details")
+VALUES (516, 'task-history-cleanup', NULL, '2020-03-21 07:00:00.324', '2020-03-21 07:00:00.327', 3, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
 VALUES (370, 'fingerprint-fields', 1, '2020-03-20 23:55:02.873', '2020-03-20 23:55:02.883', 10, '{"no-data-fingerprints":0,"failed-fingerprints":0,"updated-fingerprints":0,"fingerprints-attempted":0}');
 
 
@@ -41853,6 +41789,16 @@ INSERT INTO "public"."task_history" ("id",
                                      "ended_at",
                                      "duration",
                                      "task_details")
+VALUES (517, 'analyze', 33, '2020-03-21 07:50:30.416', '2020-03-21 07:52:30.986', 120570, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
 VALUES (447, 'sync-tables', 1, '2020-03-21 03:55:01.838', '2020-03-21 03:55:01.848', 10, '{"updated-tables":0,"total-tables":4}');
 
 
@@ -42564,36 +42510,6 @@ INSERT INTO "public"."task_history" ("id",
                                      "duration",
                                      "task_details")
 VALUES (514, 'classify-tables', 1, '2020-03-21 06:54:40.499', '2020-03-21 06:54:40.5', 1, '{"total-tables":4,"tables-classified":0}');
-
-
-INSERT INTO "public"."task_history" ("id",
-                                     "task",
-                                     "db_id",
-                                     "started_at",
-                                     "ended_at",
-                                     "duration",
-                                     "task_details")
-VALUES (515, 'send-pulses', NULL, '2020-03-21 07:00:00.174', '2020-03-21 07:00:00.177', 3, NULL);
-
-
-INSERT INTO "public"."task_history" ("id",
-                                     "task",
-                                     "db_id",
-                                     "started_at",
-                                     "ended_at",
-                                     "duration",
-                                     "task_details")
-VALUES (516, 'task-history-cleanup', NULL, '2020-03-21 07:00:00.324', '2020-03-21 07:00:00.327', 3, NULL);
-
-
-INSERT INTO "public"."task_history" ("id",
-                                     "task",
-                                     "db_id",
-                                     "started_at",
-                                     "ended_at",
-                                     "duration",
-                                     "task_details")
-VALUES (517, 'analyze', 33, '2020-03-21 07:50:30.416', '2020-03-21 07:52:30.986', 120570, NULL);
 
 
 INSERT INTO "public"."task_history" ("id",
@@ -45513,6 +45429,16 @@ INSERT INTO "public"."task_history" ("id",
                                      "ended_at",
                                      "duration",
                                      "task_details")
+VALUES (1245, 'analyze', 33, '2020-03-22 19:52:31.007', '2020-03-22 19:54:31.678', 120671, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
 VALUES (809, 'sync-fks', 1, '2020-03-21 21:54:31.607', '2020-03-21 21:54:31.618', 11, '{"total-fks":3,"updated-fks":0,"total-failed":0}');
 
 
@@ -47693,6 +47619,16 @@ INSERT INTO "public"."task_history" ("id",
                                      "ended_at",
                                      "duration",
                                      "task_details")
+VALUES (1465, 'sync', 34, '2020-03-23 07:00:00.192', '2020-03-23 07:00:00.908', 716, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
 VALUES (1027, 'classify-fields', 33, '2020-03-22 08:55:02.134', '2020-03-22 08:55:02.141', 7, '{"fields-classified":0,"fields-failed":0}');
 
 
@@ -48414,6 +48350,16 @@ INSERT INTO "public"."task_history" ("id",
                                      "duration",
                                      "task_details")
 VALUES (1099, 'send-pulses', NULL, '2020-03-22 12:00:00.089', '2020-03-22 12:00:00.091', 2, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (1621, 'sync', 34, '2020-03-23 20:00:00.189', '2020-03-23 20:00:00.518', 329, NULL);
 
 
 INSERT INTO "public"."task_history" ("id",
@@ -49864,16 +49810,6 @@ INSERT INTO "public"."task_history" ("id",
                                      "duration",
                                      "task_details")
 VALUES (1244, 'classify-tables', 34, '2020-03-22 19:52:00.703', '2020-03-22 19:52:00.713', 10, '{"total-tables":16,"tables-classified":0}');
-
-
-INSERT INTO "public"."task_history" ("id",
-                                     "task",
-                                     "db_id",
-                                     "started_at",
-                                     "ended_at",
-                                     "duration",
-                                     "task_details")
-VALUES (1245, 'analyze', 33, '2020-03-22 19:52:31.007', '2020-03-22 19:54:31.678', 120671, NULL);
 
 
 INSERT INTO "public"."task_history" ("id",
@@ -52073,16 +52009,6 @@ INSERT INTO "public"."task_history" ("id",
                                      "ended_at",
                                      "duration",
                                      "task_details")
-VALUES (1465, 'sync', 34, '2020-03-23 07:00:00.192', '2020-03-23 07:00:00.908', 716, NULL);
-
-
-INSERT INTO "public"."task_history" ("id",
-                                     "task",
-                                     "db_id",
-                                     "started_at",
-                                     "ended_at",
-                                     "duration",
-                                     "task_details")
 VALUES (1466, 'sync-timezone', 34, '2020-03-23 07:00:00.192', '2020-03-23 07:00:00.221', 29, '{"timezone-id":"Europe/Berlin"}');
 
 
@@ -53633,16 +53559,6 @@ INSERT INTO "public"."task_history" ("id",
                                      "ended_at",
                                      "duration",
                                      "task_details")
-VALUES (1621, 'sync', 34, '2020-03-23 20:00:00.189', '2020-03-23 20:00:00.518', 329, NULL);
-
-
-INSERT INTO "public"."task_history" ("id",
-                                     "task",
-                                     "db_id",
-                                     "started_at",
-                                     "ended_at",
-                                     "duration",
-                                     "task_details")
 VALUES (1622, 'sync-timezone', 34, '2020-03-23 20:00:00.189', '2020-03-23 20:00:00.194', 5, '{"timezone-id":"Europe/Berlin"}');
 
 
@@ -54413,6 +54329,16 @@ INSERT INTO "public"."task_history" ("id",
                                      "ended_at",
                                      "duration",
                                      "task_details")
+VALUES (2162, 'task-history-cleanup', NULL, '2020-04-14 22:00:00.131', '2020-04-14 22:00:00.133', 2, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
 VALUES (1734, 'sync-fields', 34, '2020-03-24 05:00:02.798', '2020-03-24 05:00:02.947', 149, '{"total-fields":131,"updated-fields":0}');
 
 
@@ -55164,6 +55090,16 @@ INSERT INTO "public"."task_history" ("id",
                                      "duration",
                                      "task_details")
 VALUES (1713, 'analyze', 34, '2020-03-24 03:00:04.959', '2020-03-24 03:00:05.031', 72, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2163, 'sync', 34, '2020-04-14 22:00:00.192', '2020-04-14 22:00:00.296', 104, NULL);
 
 
 INSERT INTO "public"."task_history" ("id",
@@ -57483,6 +57419,16 @@ INSERT INTO "public"."task_history" ("id",
                                      "ended_at",
                                      "duration",
                                      "task_details")
+VALUES (2174, 'task-history-cleanup', NULL, '2020-04-14 23:00:00.404', '2020-04-14 23:00:00.411', 7, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
 VALUES (1954, 'fingerprint-fields', 34, '2020-03-24 23:00:00.991', '2020-03-24 23:00:01.04', 49, '{"no-data-fingerprints":8,"failed-fingerprints":0,"updated-fingerprints":0,"fingerprints-attempted":8}');
 
 
@@ -58805,11 +58751,1421 @@ INSERT INTO "public"."task_history" ("id",
                                      "task_details")
 VALUES (2138, 'classify-tables', 34, '2020-03-25 14:00:00.66', '2020-03-25 14:00:00.679', 19, '{"total-tables":16,"tables-classified":0}');
 
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2139, 'sync', 34, '2020-04-14 20:00:00.367', '2020-04-14 20:00:00.468', 101, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2140, 'sync-timezone', 34, '2020-04-14 20:00:00.367', '2020-04-14 20:00:00.381', 14, '{"timezone-id":"Europe/Berlin"}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2141, 'sync-tables', 34, '2020-04-14 20:00:00.381', '2020-04-14 20:00:00.39', 9, '{"updated-tables":0,"total-tables":2}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2142, 'sync-fields', 34, '2020-04-14 20:00:00.39', '2020-04-14 20:00:00.44', 50, '{"total-fields":10,"updated-fields":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2143, 'sync-fks', 34, '2020-04-14 20:00:00.44', '2020-04-14 20:00:00.46', 20, '{"total-fks":0,"updated-fks":0,"total-failed":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2144, 'sync-metabase-metadata', 34, '2020-04-14 20:00:00.46', '2020-04-14 20:00:00.468', 8, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2145, 'analyze', 34, '2020-04-14 20:00:00.574', '2020-04-14 20:00:00.595', 21, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2149, 'send-pulses', NULL, '2020-04-14 21:00:00.108', '2020-04-14 21:00:00.116', 8, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2151, 'sync', 34, '2020-04-14 21:00:00.276', '2020-04-14 21:00:00.394', 118, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2146, 'fingerprint-fields', 34, '2020-04-14 20:00:00.574', '2020-04-14 20:00:00.587', 13, '{"no-data-fingerprints":0,"failed-fingerprints":0,"updated-fingerprints":0,"fingerprints-attempted":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2147, 'classify-fields', 34, '2020-04-14 20:00:00.587', '2020-04-14 20:00:00.591', 4, '{"fields-classified":0,"fields-failed":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2148, 'classify-tables', 34, '2020-04-14 20:00:00.591', '2020-04-14 20:00:00.595', 4, '{"total-tables":2,"tables-classified":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2150, 'task-history-cleanup', NULL, '2020-04-14 21:00:00.207', '2020-04-14 21:00:00.219', 12, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2160, 'classify-tables', 34, '2020-04-14 21:00:00.518', '2020-04-14 21:00:00.536', 18, '{"total-tables":2,"tables-classified":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2152, 'sync-timezone', 34, '2020-04-14 21:00:00.276', '2020-04-14 21:00:00.304', 28, '{"timezone-id":"Europe/Berlin"}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2153, 'sync-tables', 34, '2020-04-14 21:00:00.305', '2020-04-14 21:00:00.338', 33, '{"updated-tables":0,"total-tables":2}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2154, 'sync-fields', 34, '2020-04-14 21:00:00.338', '2020-04-14 21:00:00.369', 31, '{"total-fields":10,"updated-fields":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2155, 'sync-fks', 34, '2020-04-14 21:00:00.369', '2020-04-14 21:00:00.388', 19, '{"total-fks":0,"updated-fks":0,"total-failed":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2156, 'sync-metabase-metadata', 34, '2020-04-14 21:00:00.388', '2020-04-14 21:00:00.394', 6, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2157, 'analyze', 34, '2020-04-14 21:00:00.474', '2020-04-14 21:00:00.536', 62, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2158, 'fingerprint-fields', 34, '2020-04-14 21:00:00.474', '2020-04-14 21:00:00.501', 27, '{"no-data-fingerprints":0,"failed-fingerprints":0,"updated-fingerprints":0,"fingerprints-attempted":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2159, 'classify-fields', 34, '2020-04-14 21:00:00.501', '2020-04-14 21:00:00.518', 17, '{"fields-classified":0,"fields-failed":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2161, 'send-pulses', NULL, '2020-04-14 22:00:00.044', '2020-04-14 22:00:00.059', 15, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2166, 'sync-fields', 34, '2020-04-14 22:00:00.214', '2020-04-14 22:00:00.258', 44, '{"total-fields":10,"updated-fields":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2167, 'sync-fks', 34, '2020-04-14 22:00:00.258', '2020-04-14 22:00:00.286', 28, '{"total-fks":0,"updated-fks":0,"total-failed":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2168, 'sync-metabase-metadata', 34, '2020-04-14 22:00:00.286', '2020-04-14 22:00:00.296', 10, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2169, 'analyze', 34, '2020-04-14 22:00:00.4', '2020-04-14 22:00:00.428', 28, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2170, 'fingerprint-fields', 34, '2020-04-14 22:00:00.4', '2020-04-14 22:00:00.41', 10, '{"no-data-fingerprints":0,"failed-fingerprints":0,"updated-fingerprints":0,"fingerprints-attempted":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2171, 'classify-fields', 34, '2020-04-14 22:00:00.411', '2020-04-14 22:00:00.42', 9, '{"fields-classified":0,"fields-failed":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2172, 'classify-tables', 34, '2020-04-14 22:00:00.421', '2020-04-14 22:00:00.428', 7, '{"total-tables":2,"tables-classified":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2173, 'send-pulses', NULL, '2020-04-14 23:00:00.069', '2020-04-14 23:00:00.078', 9, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2178, 'sync-fields', 34, '2020-04-14 23:00:00.948', '2020-04-14 23:00:00.981', 33, '{"total-fields":10,"updated-fields":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2180, 'sync-metabase-metadata', 34, '2020-04-14 23:00:01', '2020-04-14 23:00:01.007', 7, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2181, 'analyze', 34, '2020-04-14 23:00:01.755', '2020-04-14 23:00:01.778', 23, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2182, 'fingerprint-fields', 34, '2020-04-14 23:00:01.755', '2020-04-14 23:00:01.768', 13, '{"no-data-fingerprints":0,"failed-fingerprints":0,"updated-fingerprints":0,"fingerprints-attempted":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2183, 'classify-fields', 34, '2020-04-14 23:00:01.768', '2020-04-14 23:00:01.773', 5, '{"fields-classified":0,"fields-failed":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2184, 'classify-tables', 34, '2020-04-14 23:00:01.773', '2020-04-14 23:00:01.778', 5, '{"total-tables":2,"tables-classified":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2237, 'sync', 34, '2020-04-15 04:00:04.014', '2020-04-15 04:00:04.08', 66, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2250, 'sync-timezone', 34, '2020-04-15 05:00:01.795', '2020-04-15 05:00:01.801', 6, '{"timezone-id":"Europe/Berlin"}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2251, 'sync-tables', 34, '2020-04-15 05:00:01.801', '2020-04-15 05:00:01.809', 8, '{"updated-tables":0,"total-tables":2}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2252, 'sync-fields', 34, '2020-04-15 05:00:01.809', '2020-04-15 05:00:01.837', 28, '{"total-fields":10,"updated-fields":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2253, 'sync-fks', 34, '2020-04-15 05:00:01.837', '2020-04-15 05:00:01.856', 19, '{"total-fks":0,"updated-fks":0,"total-failed":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2254, 'sync-metabase-metadata', 34, '2020-04-15 05:00:01.856', '2020-04-15 05:00:01.867', 11, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2255, 'analyze', 34, '2020-04-15 05:00:04.016', '2020-04-15 05:00:04.044', 28, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2256, 'fingerprint-fields', 34, '2020-04-15 05:00:04.016', '2020-04-15 05:00:04.03', 14, '{"no-data-fingerprints":0,"failed-fingerprints":0,"updated-fingerprints":0,"fingerprints-attempted":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2257, 'classify-fields', 34, '2020-04-15 05:00:04.03', '2020-04-15 05:00:04.037', 7, '{"fields-classified":0,"fields-failed":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2258, 'classify-tables', 34, '2020-04-15 05:00:04.037', '2020-04-15 05:00:04.044', 7, '{"total-tables":2,"tables-classified":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2272, 'task-history-cleanup', NULL, '2020-04-15 07:00:02.786', '2020-04-15 07:00:02.792', 6, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2164, 'sync-timezone', 34, '2020-04-14 22:00:00.192', '2020-04-14 22:00:00.203', 11, '{"timezone-id":"Europe/Berlin"}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2165, 'sync-tables', 34, '2020-04-14 22:00:00.203', '2020-04-14 22:00:00.213', 10, '{"updated-tables":0,"total-tables":2}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2175, 'sync', 34, '2020-04-14 23:00:00.931', '2020-04-14 23:00:01.011', 80, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2176, 'sync-timezone', 34, '2020-04-14 23:00:00.932', '2020-04-14 23:00:00.941', 9, '{"timezone-id":"Europe/Berlin"}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2177, 'sync-tables', 34, '2020-04-14 23:00:00.941', '2020-04-14 23:00:00.948', 7, '{"updated-tables":0,"total-tables":2}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2179, 'sync-fks', 34, '2020-04-14 23:00:00.981', '2020-04-14 23:00:01', 19, '{"total-fks":0,"updated-fks":0,"total-failed":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2185, 'send-pulses', NULL, '2020-04-15 00:00:01.161', '2020-04-15 00:00:01.165', 4, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2186, 'task-history-cleanup', NULL, '2020-04-15 00:00:02.114', '2020-04-15 00:00:02.117', 3, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2187, 'sync', 34, '2020-04-15 00:00:03.962', '2020-04-15 00:00:04.162', 200, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2188, 'sync-timezone', 34, '2020-04-15 00:00:03.962', '2020-04-15 00:00:04.013', 51, '{"timezone-id":"Europe/Berlin"}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2189, 'sync-tables', 34, '2020-04-15 00:00:04.013', '2020-04-15 00:00:04.042', 29, '{"updated-tables":0,"total-tables":2}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2190, 'sync-fields', 34, '2020-04-15 00:00:04.042', '2020-04-15 00:00:04.131', 89, '{"total-fields":10,"updated-fields":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2191, 'sync-fks', 34, '2020-04-15 00:00:04.131', '2020-04-15 00:00:04.153', 22, '{"total-fks":0,"updated-fks":0,"total-failed":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2192, 'sync-metabase-metadata', 34, '2020-04-15 00:00:04.153', '2020-04-15 00:00:04.162', 9, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2193, 'analyze', 34, '2020-04-15 00:00:07.183', '2020-04-15 00:00:07.232', 49, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2194, 'fingerprint-fields', 34, '2020-04-15 00:00:07.183', '2020-04-15 00:00:07.211', 28, '{"no-data-fingerprints":0,"failed-fingerprints":0,"updated-fingerprints":0,"fingerprints-attempted":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2195, 'classify-fields', 34, '2020-04-15 00:00:07.211', '2020-04-15 00:00:07.217', 6, '{"fields-classified":0,"fields-failed":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2196, 'classify-tables', 34, '2020-04-15 00:00:07.217', '2020-04-15 00:00:07.231', 14, '{"total-tables":2,"tables-classified":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2197, 'field values scanning', 34, '2020-04-15 00:00:00.417', '2020-04-15 00:00:10.239', 9822, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2198, 'update-field-values', 34, '2020-04-15 00:00:00.417', '2020-04-15 00:00:10.239', 9822, '{"errors":0,"created":0,"updated":0,"deleted":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2199, 'send-pulses', NULL, '2020-04-15 01:00:00.255', '2020-04-15 01:00:00.271', 16, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2202, 'sync-timezone', 34, '2020-04-15 01:00:00.975', '2020-04-15 01:00:00.981', 6, '{"timezone-id":"Europe/Berlin"}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2211, 'send-pulses', NULL, '2020-04-15 02:00:00.26', '2020-04-15 02:00:00.269', 9, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2212, 'task-history-cleanup', NULL, '2020-04-15 02:00:00.378', '2020-04-15 02:00:00.38', 2, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2213, 'sync', 34, '2020-04-15 02:00:00.505', '2020-04-15 02:00:00.58', 75, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2214, 'sync-timezone', 34, '2020-04-15 02:00:00.505', '2020-04-15 02:00:00.519', 14, '{"timezone-id":"Europe/Berlin"}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2215, 'sync-tables', 34, '2020-04-15 02:00:00.519', '2020-04-15 02:00:00.528', 9, '{"updated-tables":0,"total-tables":2}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2216, 'sync-fields', 34, '2020-04-15 02:00:00.528', '2020-04-15 02:00:00.556', 28, '{"total-fields":10,"updated-fields":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2223, 'send-pulses', NULL, '2020-04-15 03:00:04.963', '2020-04-15 03:00:04.967', 4, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2224, 'task-history-cleanup', NULL, '2020-04-15 03:00:05.724', '2020-04-15 03:00:05.725', 1, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2235, 'send-pulses', NULL, '2020-04-15 04:00:01.401', '2020-04-15 04:00:01.415', 14, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2236, 'task-history-cleanup', NULL, '2020-04-15 04:00:02.994', '2020-04-15 04:00:03.005', 11, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2238, 'sync-timezone', 34, '2020-04-15 04:00:04.014', '2020-04-15 04:00:04.022', 8, '{"timezone-id":"Europe/Berlin"}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2239, 'sync-tables', 34, '2020-04-15 04:00:04.022', '2020-04-15 04:00:04.03', 8, '{"updated-tables":0,"total-tables":2}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2240, 'sync-fields', 34, '2020-04-15 04:00:04.03', '2020-04-15 04:00:04.055', 25, '{"total-fields":10,"updated-fields":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2241, 'sync-fks', 34, '2020-04-15 04:00:04.055', '2020-04-15 04:00:04.072', 17, '{"total-fks":0,"updated-fks":0,"total-failed":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2242, 'sync-metabase-metadata', 34, '2020-04-15 04:00:04.072', '2020-04-15 04:00:04.08', 8, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2243, 'analyze', 34, '2020-04-15 04:00:06.58', '2020-04-15 04:00:06.609', 29, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2244, 'fingerprint-fields', 34, '2020-04-15 04:00:06.58', '2020-04-15 04:00:06.598', 18, '{"no-data-fingerprints":0,"failed-fingerprints":0,"updated-fingerprints":0,"fingerprints-attempted":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2245, 'classify-fields', 34, '2020-04-15 04:00:06.598', '2020-04-15 04:00:06.604', 6, '{"fields-classified":0,"fields-failed":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2246, 'classify-tables', 34, '2020-04-15 04:00:06.604', '2020-04-15 04:00:06.609', 5, '{"total-tables":2,"tables-classified":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2247, 'send-pulses', NULL, '2020-04-15 05:00:00.401', '2020-04-15 05:00:00.418', 17, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2248, 'task-history-cleanup', NULL, '2020-04-15 05:00:01.06', '2020-04-15 05:00:01.062', 2, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2260, 'task-history-cleanup', NULL, '2020-04-15 06:00:02.357', '2020-04-15 06:00:02.359', 2, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2269, 'classify-fields', 34, '2020-04-15 06:00:06.347', '2020-04-15 06:00:06.354', 7, '{"fields-classified":0,"fields-failed":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2270, 'classify-tables', 34, '2020-04-15 06:00:06.354', '2020-04-15 06:00:06.36', 6, '{"total-tables":2,"tables-classified":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2271, 'send-pulses', NULL, '2020-04-15 07:00:02.371', '2020-04-15 07:00:02.39', 19, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2200, 'task-history-cleanup', NULL, '2020-04-15 01:00:00.789', '2020-04-15 01:00:00.793', 4, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2201, 'sync', 34, '2020-04-15 01:00:00.975', '2020-04-15 01:00:01.171', 196, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2203, 'sync-tables', 34, '2020-04-15 01:00:00.981', '2020-04-15 01:00:00.988', 7, '{"updated-tables":0,"total-tables":2}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2204, 'sync-fields', 34, '2020-04-15 01:00:00.988', '2020-04-15 01:00:01.135', 147, '{"total-fields":10,"updated-fields":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2205, 'sync-fks', 34, '2020-04-15 01:00:01.135', '2020-04-15 01:00:01.164', 29, '{"total-fks":0,"updated-fks":0,"total-failed":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2206, 'sync-metabase-metadata', 34, '2020-04-15 01:00:01.164', '2020-04-15 01:00:01.171', 7, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2207, 'analyze', 34, '2020-04-15 01:00:01.773', '2020-04-15 01:00:01.803', 30, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2208, 'fingerprint-fields', 34, '2020-04-15 01:00:01.773', '2020-04-15 01:00:01.79', 17, '{"no-data-fingerprints":0,"failed-fingerprints":0,"updated-fingerprints":0,"fingerprints-attempted":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2209, 'classify-fields', 34, '2020-04-15 01:00:01.79', '2020-04-15 01:00:01.795', 5, '{"fields-classified":0,"fields-failed":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2210, 'classify-tables', 34, '2020-04-15 01:00:01.795', '2020-04-15 01:00:01.802', 7, '{"total-tables":2,"tables-classified":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2217, 'sync-fks', 34, '2020-04-15 02:00:00.556', '2020-04-15 02:00:00.575', 19, '{"total-fks":0,"updated-fks":0,"total-failed":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2218, 'sync-metabase-metadata', 34, '2020-04-15 02:00:00.575', '2020-04-15 02:00:00.58', 5, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2219, 'analyze', 34, '2020-04-15 02:00:00.67', '2020-04-15 02:00:00.697', 27, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2220, 'fingerprint-fields', 34, '2020-04-15 02:00:00.67', '2020-04-15 02:00:00.69', 20, '{"no-data-fingerprints":0,"failed-fingerprints":0,"updated-fingerprints":0,"fingerprints-attempted":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2221, 'classify-fields', 34, '2020-04-15 02:00:00.69', '2020-04-15 02:00:00.694', 4, '{"fields-classified":0,"fields-failed":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2222, 'classify-tables', 34, '2020-04-15 02:00:00.695', '2020-04-15 02:00:00.697', 2, '{"total-tables":2,"tables-classified":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2225, 'sync', 34, '2020-04-15 03:00:05.976', '2020-04-15 03:00:06.065', 89, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2226, 'sync-timezone', 34, '2020-04-15 03:00:05.976', '2020-04-15 03:00:05.985', 9, '{"timezone-id":"Europe/Berlin"}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2227, 'sync-tables', 34, '2020-04-15 03:00:05.985', '2020-04-15 03:00:05.995', 10, '{"updated-tables":0,"total-tables":2}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2228, 'sync-fields', 34, '2020-04-15 03:00:05.995', '2020-04-15 03:00:06.024', 29, '{"total-fields":10,"updated-fields":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2229, 'sync-fks', 34, '2020-04-15 03:00:06.024', '2020-04-15 03:00:06.055', 31, '{"total-fks":0,"updated-fks":0,"total-failed":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2230, 'sync-metabase-metadata', 34, '2020-04-15 03:00:06.055', '2020-04-15 03:00:06.065', 10, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2231, 'analyze', 34, '2020-04-15 03:00:06.917', '2020-04-15 03:00:06.937', 20, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2232, 'fingerprint-fields', 34, '2020-04-15 03:00:06.917', '2020-04-15 03:00:06.93', 13, '{"no-data-fingerprints":0,"failed-fingerprints":0,"updated-fingerprints":0,"fingerprints-attempted":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2233, 'classify-fields', 34, '2020-04-15 03:00:06.93', '2020-04-15 03:00:06.933', 3, '{"fields-classified":0,"fields-failed":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2234, 'classify-tables', 34, '2020-04-15 03:00:06.933', '2020-04-15 03:00:06.937', 4, '{"total-tables":2,"tables-classified":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2249, 'sync', 34, '2020-04-15 05:00:01.795', '2020-04-15 05:00:01.868', 73, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2259, 'send-pulses', NULL, '2020-04-15 06:00:00.44', '2020-04-15 06:00:01.008', 568, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2261, 'sync', 34, '2020-04-15 06:00:03.352', '2020-04-15 06:00:03.419', 67, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2262, 'sync-timezone', 34, '2020-04-15 06:00:03.352', '2020-04-15 06:00:03.361', 9, '{"timezone-id":"Europe/Berlin"}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2263, 'sync-tables', 34, '2020-04-15 06:00:03.361', '2020-04-15 06:00:03.369', 8, '{"updated-tables":0,"total-tables":2}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2264, 'sync-fields', 34, '2020-04-15 06:00:03.369', '2020-04-15 06:00:03.393', 24, '{"total-fields":10,"updated-fields":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2265, 'sync-fks', 34, '2020-04-15 06:00:03.393', '2020-04-15 06:00:03.411', 18, '{"total-fks":0,"updated-fks":0,"total-failed":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2266, 'sync-metabase-metadata', 34, '2020-04-15 06:00:03.411', '2020-04-15 06:00:03.419', 8, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2267, 'analyze', 34, '2020-04-15 06:00:06.282', '2020-04-15 06:00:06.36', 78, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2268, 'fingerprint-fields', 34, '2020-04-15 06:00:06.283', '2020-04-15 06:00:06.347', 64, '{"no-data-fingerprints":0,"failed-fingerprints":0,"updated-fingerprints":0,"fingerprints-attempted":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2273, 'sync', 34, '2020-04-15 07:00:03.065', '2020-04-15 07:00:03.198', 133, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2274, 'sync-timezone', 34, '2020-04-15 07:00:03.065', '2020-04-15 07:00:03.088', 23, '{"timezone-id":"Europe/Berlin"}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2275, 'sync-tables', 34, '2020-04-15 07:00:03.088', '2020-04-15 07:00:03.153', 65, '{"updated-tables":0,"total-tables":2}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2276, 'sync-fields', 34, '2020-04-15 07:00:03.154', '2020-04-15 07:00:03.177', 23, '{"total-fields":10,"updated-fields":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2277, 'sync-fks', 34, '2020-04-15 07:00:03.178', '2020-04-15 07:00:03.193', 15, '{"total-fks":0,"updated-fks":0,"total-failed":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2278, 'sync-metabase-metadata', 34, '2020-04-15 07:00:03.193', '2020-04-15 07:00:03.198', 5, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2279, 'analyze', 34, '2020-04-15 07:00:03.52', '2020-04-15 07:00:03.534', 14, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2280, 'fingerprint-fields', 34, '2020-04-15 07:00:03.52', '2020-04-15 07:00:03.527', 7, '{"no-data-fingerprints":0,"failed-fingerprints":0,"updated-fingerprints":0,"fingerprints-attempted":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2281, 'classify-fields', 34, '2020-04-15 07:00:03.528', '2020-04-15 07:00:03.531', 3, '{"fields-classified":0,"fields-failed":0}');
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2282, 'classify-tables', 34, '2020-04-15 07:00:03.531', '2020-04-15 07:00:03.534', 3, '{"total-tables":2,"tables-classified":0}');
+
 --
 -- Name: task_history_id_seq; Type: SEQUENCE SET; Schema: public; Owner: metabase
 --
 
-SELECT pg_catalog.setval('"public"."task_history_id_seq"', 2116, TRUE);
+SELECT pg_catalog.setval('"public"."task_history_id_seq"', 2282, TRUE);
 
 --
 -- Data for Name: view_log; Type: TABLE DATA; Schema: public; Owner: metabase
@@ -62418,18 +63774,6 @@ ALTER TABLE ONLY "public"."query_execution" ADD CONSTRAINT "query_execution_pkey
 ALTER TABLE ONLY "public"."query" ADD CONSTRAINT "query_pkey" PRIMARY KEY ("query_hash");
 
 --
--- Name: query_queryexecution_pkey; Type: CONSTRAINT; Schema: public; Owner: metabase
---
-
-ALTER TABLE ONLY "public"."query_queryexecution" ADD CONSTRAINT "query_queryexecution_pkey" PRIMARY KEY ("id");
-
---
--- Name: query_queryexecution_uuid_key; Type: CONSTRAINT; Schema: public; Owner: metabase
---
-
-ALTER TABLE ONLY "public"."query_queryexecution" ADD CONSTRAINT "query_queryexecution_uuid_key" UNIQUE ("uuid");
-
---
 -- Name: report_card_pkey; Type: CONSTRAINT; Schema: public; Owner: metabase
 --
 
@@ -63025,24 +64369,6 @@ CREATE INDEX "idx_query_execution_query_hash_started_at" ON "public"."query_exec
 CREATE INDEX "idx_query_execution_started_at" ON "public"."query_execution" USING "btree" ("started_at");
 
 --
--- Name: idx_query_queryexecution_query_hash; Type: INDEX; Schema: public; Owner: metabase
---
-
-CREATE INDEX "idx_query_queryexecution_query_hash" ON "public"."query_queryexecution" USING "btree" ("query_hash");
-
---
--- Name: idx_query_queryexecution_started_at; Type: INDEX; Schema: public; Owner: metabase
---
-
-CREATE INDEX "idx_query_queryexecution_started_at" ON "public"."query_queryexecution" USING "btree" ("started_at");
-
---
--- Name: idx_queryexecution_executor_id; Type: INDEX; Schema: public; Owner: metabase
---
-
-CREATE INDEX "idx_queryexecution_executor_id" ON "public"."query_queryexecution" USING "btree" ("executor_id");
-
---
 -- Name: idx_report_dashboard_show_in_getting_started; Type: INDEX; Schema: public; Owner: metabase
 --
 
@@ -63464,13 +64790,6 @@ FOREIGN KEY ("sched_name",
              "job_group") REFERENCES "public"."qrtz_job_details"("sched_name",
                                                                  "job_name",
                                                                  "job_group") DEFERRABLE;
-
---
--- Name: fk_queryexecution_ref_user_id; Type: FK CONSTRAINT; Schema: public; Owner: metabase
---
-
-ALTER TABLE ONLY "public"."query_queryexecution" ADD CONSTRAINT "fk_queryexecution_ref_user_id"
-FOREIGN KEY ("executor_id") REFERENCES "public"."core_user"("id") DEFERRABLE;
 
 --
 -- Name: fk_report_card_ref_database_id; Type: FK CONSTRAINT; Schema: public; Owner: metabase
