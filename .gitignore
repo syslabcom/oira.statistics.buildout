@@ -21,9 +21,7 @@
 *.swp
 *.pt.py
 _site
-scripts/lib
-scripts/bin
-scripts/include
+scripts
 secrets.robot
 log.html
 output.xml

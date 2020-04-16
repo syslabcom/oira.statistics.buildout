@@ -4,4 +4,4 @@ pg_dump --clean --if-exists --column-inserts --quote-all-identifiers \
     > /tmp/metabase-dump.sql;
 ${buildout:bin-directory}/sqlformat --reindent --keywords upper --identifiers lower \
     /tmp/metabase-dump.sql \
-    > ${buildout:directory}/sql/metabase-dump.sql
+    > ${buildout:directory}/dumps/metabase-dump.sql
