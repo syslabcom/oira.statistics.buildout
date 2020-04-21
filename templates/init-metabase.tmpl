@@ -32,10 +32,9 @@ ${parts.buildout['bin-directory']}/init-metabase-instance \\
     --database-user='${parts[instance]['database-user']}' \\
     --database-password='${escape(parts[instance]['database-password'])}' \\
     --database-name-statistics='${parts[instance]['database-name-statistics']}' \\
-     {% if parts[instance].get('statistics-user-email') %} \\
-    --statistics-user-email='${parts[instance]['statistics-user-email']}' \\
-    --statistics-user-password='${escape(parts[instance]['statistics-user-password'])}' \\
-    --statistics-user-first-name='${parts[instance]['statistics-user-first-name']}' \\
-    --statistics-user-last-name='${parts[instance]['statistics-user-last-name']}' \\
+    {% for user in parts[instance].get('statistics-user').split('\n') %} \\
+    {% with email, password, first_name, last_name = user.split(' ') %} \\
+    --statistics-user '${email}' '${escape(password)}' '${first_name}' '${last_name}' \\
+    {% end %} \\
     {% end %} || exit $?
 {% end %}
