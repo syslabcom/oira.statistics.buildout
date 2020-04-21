@@ -4751,11 +4751,22 @@ INSERT INTO "public"."collection" ("id",
                                    "slug")
 VALUES (4, 'Accounts', 'Statistics concerning OiRA user accounts', '#509EE3', FALSE, '/', NULL, 'accounts');
 
+
+INSERT INTO "public"."collection" ("id",
+                                   "name",
+                                   "description",
+                                   "color",
+                                   "archived",
+                                   "location",
+                                   "personal_owner_id",
+                                   "slug")
+VALUES (6, 'Julia Flintrop''s Personal Collection', NULL, '#31698A', FALSE, '/', 8, 'julia_flintrop_s_personal_collection');
+
 --
 -- Name: collection_id_seq; Type: SEQUENCE SET; Schema: public; Owner: metabase
 --
 
-SELECT pg_catalog.setval('"public"."collection_id_seq"', 4, TRUE);
+SELECT pg_catalog.setval('"public"."collection_id_seq"', 6, TRUE);
 
 --
 -- Data for Name: collection_revision; Type: TABLE DATA; Schema: public; Owner: metabase
@@ -4814,6 +4825,12 @@ INSERT INTO "public"."core_session" ("id",
                                      "created_at")
 VALUES ('b1ddf91a-5dcf-41ca-8cd7-9c2572e4778c', 2, '2020-04-15 07:21:59.916108+02');
 
+
+INSERT INTO "public"."core_session" ("id",
+                                     "user_id",
+                                     "created_at")
+VALUES ('a128715c-7c4f-4816-a85b-82a521894a42', 2, '2020-04-21 08:55:30.274171+02');
+
 --
 -- Data for Name: core_user; Type: TABLE DATA; Schema: public; Owner: metabase
 --
@@ -4855,13 +4872,33 @@ INSERT INTO "public"."core_user" ("id",
                                   "ldap_auth",
                                   "login_attributes",
                                   "updated_at")
-VALUES (2, 'admin@syslab.com', 'Admin', 'Syslab', '$2a$10$8FH3AZkTBn2PAqDWo12VMePDSkPguSjs0LLxPeS/7awsfE71VAS.u', '6826d496-50a4-403c-a572-3af560545b83', '2020-03-23 06:49:50.992574+01', '2020-04-15 07:22:00.174164+02', TRUE, TRUE, NULL, NULL, FALSE, FALSE, FALSE, NULL, '2020-04-15 07:22:00.174164');
+VALUES (2, 'admin@syslab.com', 'Admin', 'Syslab', '$2a$10$8FH3AZkTBn2PAqDWo12VMePDSkPguSjs0LLxPeS/7awsfE71VAS.u', '6826d496-50a4-403c-a572-3af560545b83', '2020-03-23 06:49:50.992574+01', '2020-04-21 08:55:30.305564+02', TRUE, TRUE, NULL, NULL, FALSE, FALSE, FALSE, NULL, '2020-04-21 08:55:30.305564');
+
+
+INSERT INTO "public"."core_user" ("id",
+                                  "email",
+                                  "first_name",
+                                  "last_name",
+                                  "password",
+                                  "password_salt",
+                                  "date_joined",
+                                  "last_login",
+                                  "is_superuser",
+                                  "is_active",
+                                  "reset_token",
+                                  "reset_triggered",
+                                  "is_qbnewb",
+                                  "google_auth",
+                                  "ldap_auth",
+                                  "login_attributes",
+                                  "updated_at")
+VALUES (8, 'flintrop@osha.europa.eu', 'Julia', 'Flintrop', '$2a$10$LyGq.pHNqeHrBIc.DJaTi.eBpePq/EPCy2WMwBm1NGLFmXEM/D79.', 'd36b36dc-b0b2-4cb6-b96b-4317c64ddc9e', '2020-04-21 08:56:05.081655+02', NULL, FALSE, TRUE, '$2a$10$YSlbYXYl.ESrFDm7Ii15XuCJ.4OVWVx3JvBTVUkqk2w79PK87yQ0u', 1587452165183, TRUE, FALSE, FALSE, NULL, '2020-04-21 08:56:05.081655');
 
 --
 -- Name: core_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: metabase
 --
 
-SELECT pg_catalog.setval('"public"."core_user_id_seq"', 1, TRUE);
+SELECT pg_catalog.setval('"public"."core_user_id_seq"', 8, TRUE);
 
 --
 -- Data for Name: dashboard_favorite; Type: TABLE DATA; Schema: public; Owner: metabase
@@ -4957,6 +4994,23 @@ VALUES ('add-migrated-collections', '2020-02-27 12:43:40.66');
 --
 -- Data for Name: databasechangelog; Type: TABLE DATA; Schema: public; Owner: metabase
 --
+
+INSERT INTO "public"."databasechangelog" ("id",
+                                          "author",
+                                          "filename",
+                                          "dateexecuted",
+                                          "orderexecuted",
+                                          "exectype",
+                                          "md5sum",
+                                          "description",
+                                          "comments",
+                                          "tag",
+                                          "liquibase",
+                                          "contexts",
+                                          "labels",
+                                          "deployment_id")
+VALUES ('152', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:45.093578', 143, 'MARK_RAN', '8:4bcbc472f2d6ae3a5e7eca425940e52b', 'sql', 'Added 0.34.2', NULL, '3.6.3', NULL, NULL, '4627163000');
+
 
 INSERT INTO "public"."databasechangelog" ("id",
                                           "author",
@@ -5296,23 +5350,6 @@ INSERT INTO "public"."databasechangelog" ("id",
                                           "labels",
                                           "deployment_id")
 VALUES ('151', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:45.091444', 142, 'MARK_RAN', '8:bb752a7d09d437c7ac294d5ab2600079', 'sql', 'Added 0.34.2', NULL, '3.6.3', NULL, NULL, '4627163000');
-
-
-INSERT INTO "public"."databasechangelog" ("id",
-                                          "author",
-                                          "filename",
-                                          "dateexecuted",
-                                          "orderexecuted",
-                                          "exectype",
-                                          "md5sum",
-                                          "description",
-                                          "comments",
-                                          "tag",
-                                          "liquibase",
-                                          "contexts",
-                                          "labels",
-                                          "deployment_id")
-VALUES ('152', 'camsaul', 'migrations/000_migrations.yaml', '2020-03-19 15:12:45.093578', 143, 'MARK_RAN', '8:4bcbc472f2d6ae3a5e7eca425940e52b', 'sql', 'Added 0.34.2', NULL, '3.6.3', NULL, NULL, '4627163000');
 
 
 INSERT INTO "public"."databasechangelog" ("id",
@@ -12421,11 +12458,17 @@ INSERT INTO "public"."permissions_group_membership" ("id",
                                                      "group_id")
 VALUES (4, 2, 2);
 
+
+INSERT INTO "public"."permissions_group_membership" ("id",
+                                                     "user_id",
+                                                     "group_id")
+VALUES (5, 8, 1);
+
 --
 -- Name: permissions_group_membership_id_seq; Type: SEQUENCE SET; Schema: public; Owner: metabase
 --
 
-SELECT pg_catalog.setval('"public"."permissions_group_membership_id_seq"', 2, TRUE);
+SELECT pg_catalog.setval('"public"."permissions_group_membership_id_seq"', 5, TRUE);
 
 --
 -- Name: permissions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: metabase
@@ -12493,6 +12536,14 @@ INSERT INTO "public"."qrtz_cron_triggers" ("sched_name",
                                            "trigger_group",
                                            "cron_expression",
                                            "time_zone_id")
+VALUES ('MetabaseScheduler', 'metabase.task.sync-and-analyze.trigger.34', 'DEFAULT', '0 0 * * * ? *', 'Europe/Berlin');
+
+
+INSERT INTO "public"."qrtz_cron_triggers" ("sched_name",
+                                           "trigger_name",
+                                           "trigger_group",
+                                           "cron_expression",
+                                           "time_zone_id")
 VALUES ('MetabaseScheduler', 'metabase.task.update-field-values.trigger.34', 'DEFAULT', '0 0 0 * * ? *', 'Europe/Berlin');
 
 
@@ -12502,30 +12553,6 @@ INSERT INTO "public"."qrtz_cron_triggers" ("sched_name",
                                            "cron_expression",
                                            "time_zone_id")
 VALUES ('MetabaseScheduler', 'metabase.task.upgrade-checks.trigger', 'DEFAULT', '0 15 6,18 * * ? *', 'Europe/Berlin');
-
-
-INSERT INTO "public"."qrtz_cron_triggers" ("sched_name",
-                                           "trigger_name",
-                                           "trigger_group",
-                                           "cron_expression",
-                                           "time_zone_id")
-VALUES ('MetabaseScheduler', 'metabase.task.send-pulses.trigger', 'DEFAULT', '0 0 * * * ? *', 'Europe/Berlin');
-
-
-INSERT INTO "public"."qrtz_cron_triggers" ("sched_name",
-                                           "trigger_name",
-                                           "trigger_group",
-                                           "cron_expression",
-                                           "time_zone_id")
-VALUES ('MetabaseScheduler', 'metabase.task.task-history-cleanup.trigger', 'DEFAULT', '0 0 * * * ? *', 'Europe/Berlin');
-
-
-INSERT INTO "public"."qrtz_cron_triggers" ("sched_name",
-                                           "trigger_name",
-                                           "trigger_group",
-                                           "cron_expression",
-                                           "time_zone_id")
-VALUES ('MetabaseScheduler', 'metabase.task.sync-and-analyze.trigger.34', 'DEFAULT', '0 0 * * * ? *', 'Europe/Berlin');
 
 
 INSERT INTO "public"."qrtz_cron_triggers" ("sched_name",
@@ -12549,7 +12576,23 @@ INSERT INTO "public"."qrtz_cron_triggers" ("sched_name",
                                            "trigger_group",
                                            "cron_expression",
                                            "time_zone_id")
+VALUES ('MetabaseScheduler', 'metabase.task.send-pulses.trigger', 'DEFAULT', '0 0 * * * ? *', 'Europe/Berlin');
+
+
+INSERT INTO "public"."qrtz_cron_triggers" ("sched_name",
+                                           "trigger_name",
+                                           "trigger_group",
+                                           "cron_expression",
+                                           "time_zone_id")
 VALUES ('MetabaseScheduler', 'metabase.task.follow-up-emails.trigger', 'DEFAULT', '0 0 12 * * ? *', 'Europe/Berlin');
+
+
+INSERT INTO "public"."qrtz_cron_triggers" ("sched_name",
+                                           "trigger_name",
+                                           "trigger_group",
+                                           "cron_expression",
+                                           "time_zone_id")
+VALUES ('MetabaseScheduler', 'metabase.task.task-history-cleanup.trigger', 'DEFAULT', '0 0 * * * ? *', 'Europe/Berlin');
 
 --
 -- Data for Name: qrtz_fired_triggers; Type: TABLE DATA; Schema: public; Owner: metabase
@@ -12685,7 +12728,7 @@ INSERT INTO "public"."qrtz_scheduler_state" ("sched_name",
                                              "instance_name",
                                              "last_checkin_time",
                                              "checkin_interval")
-VALUES ('MetabaseScheduler', 'osha1586870263314', 1586928186784, 7500);
+VALUES ('MetabaseScheduler', 'osha1587451963547', 1587452196235, 7500);
 
 --
 -- Data for Name: qrtz_simple_triggers; Type: TABLE DATA; Schema: public; Owner: metabase
@@ -12713,7 +12756,7 @@ INSERT INTO "public"."qrtz_triggers" ("sched_name",
                                       "calendar_name",
                                       "misfire_instr",
                                       "job_data")
-VALUES ('MetabaseScheduler', 'metabase.task.upgrade-checks.trigger', 'DEFAULT', 'metabase.task.upgrade-checks.job', 'DEFAULT', NULL, 1586967300000, 1586924100000, 5, 'WAITING', 'CRON', 1586870263000, 0, NULL, 0, '\x');
+VALUES ('MetabaseScheduler', 'metabase.task.sync-and-analyze.trigger.34', 'DEFAULT', 'metabase.task.sync-and-analyze.job', 'DEFAULT', 'sync-and-analyze Database 34', 1587452400000, -1, 5, 'WAITING', 'CRON', 1587451963000, 0, NULL, 2, '\xaced0005737200156f72672e71756172747a2e4a6f62446174614d61709fb083e8bfa9b0cb020000787200266f72672e71756172747a2e7574696c732e537472696e674b65794469727479466c61674d61708208e8c3fbc55d280200015a0013616c6c6f77735472616e7369656e74446174617872001d6f72672e71756172747a2e7574696c732e4469727479466c61674d617013e62ead28760ace0200025a000564697274794c00036d617074000f4c6a6176612f7574696c2f4d61703b787001737200116a6176612e7574696c2e486173684d61700507dac1c31660d103000246000a6c6f6164466163746f724900097468726573686f6c6478703f4000000000000c7708000000100000000174000564622d6964737200116a6176612e6c616e672e496e746567657212e2a0a4f781873802000149000576616c7565787200106a6176612e6c616e672e4e756d62657286ac951d0b94e08b0200007870000000227800');
 
 
 INSERT INTO "public"."qrtz_triggers" ("sched_name",
@@ -12732,7 +12775,7 @@ INSERT INTO "public"."qrtz_triggers" ("sched_name",
                                       "calendar_name",
                                       "misfire_instr",
                                       "job_data")
-VALUES ('MetabaseScheduler', 'metabase.task.update-field-values.trigger.34', 'DEFAULT', 'metabase.task.update-field-values.job', 'DEFAULT', 'update-field-values Database 34', 1586988000000, 1586901600000, 5, 'WAITING', 'CRON', 1586870263000, 0, NULL, 2, '\xaced0005737200156f72672e71756172747a2e4a6f62446174614d61709fb083e8bfa9b0cb020000787200266f72672e71756172747a2e7574696c732e537472696e674b65794469727479466c61674d61708208e8c3fbc55d280200015a0013616c6c6f77735472616e7369656e74446174617872001d6f72672e71756172747a2e7574696c732e4469727479466c61674d617013e62ead28760ace0200025a000564697274794c00036d617074000f4c6a6176612f7574696c2f4d61703b787001737200116a6176612e7574696c2e486173684d61700507dac1c31660d103000246000a6c6f6164466163746f724900097468726573686f6c6478703f4000000000000c7708000000100000000174000564622d6964737200116a6176612e6c616e672e496e746567657212e2a0a4f781873802000149000576616c7565787200106a6176612e6c616e672e4e756d62657286ac951d0b94e08b0200007870000000227800');
+VALUES ('MetabaseScheduler', 'metabase.task.update-field-values.trigger.34', 'DEFAULT', 'metabase.task.update-field-values.job', 'DEFAULT', 'update-field-values Database 34', 1587506400000, -1, 5, 'WAITING', 'CRON', 1587451963000, 0, NULL, 2, '\xaced0005737200156f72672e71756172747a2e4a6f62446174614d61709fb083e8bfa9b0cb020000787200266f72672e71756172747a2e7574696c732e537472696e674b65794469727479466c61674d61708208e8c3fbc55d280200015a0013616c6c6f77735472616e7369656e74446174617872001d6f72672e71756172747a2e7574696c732e4469727479466c61674d617013e62ead28760ace0200025a000564697274794c00036d617074000f4c6a6176612f7574696c2f4d61703b787001737200116a6176612e7574696c2e486173684d61700507dac1c31660d103000246000a6c6f6164466163746f724900097468726573686f6c6478703f4000000000000c7708000000100000000174000564622d6964737200116a6176612e6c616e672e496e746567657212e2a0a4f781873802000149000576616c7565787200106a6176612e6c616e672e4e756d62657286ac951d0b94e08b0200007870000000227800');
 
 
 INSERT INTO "public"."qrtz_triggers" ("sched_name",
@@ -12751,7 +12794,7 @@ INSERT INTO "public"."qrtz_triggers" ("sched_name",
                                       "calendar_name",
                                       "misfire_instr",
                                       "job_data")
-VALUES ('MetabaseScheduler', 'metabase.task.send-pulses.trigger', 'DEFAULT', 'metabase.task.send-pulses.job', 'DEFAULT', NULL, 1586930400000, 1586926800000, 5, 'WAITING', 'CRON', 1586870263000, 0, NULL, 1, '\x');
+VALUES ('MetabaseScheduler', 'metabase.task.upgrade-checks.trigger', 'DEFAULT', 'metabase.task.upgrade-checks.job', 'DEFAULT', NULL, 1587485700000, -1, 5, 'WAITING', 'CRON', 1587451964000, 0, NULL, 0, '\x');
 
 
 INSERT INTO "public"."qrtz_triggers" ("sched_name",
@@ -12770,7 +12813,7 @@ INSERT INTO "public"."qrtz_triggers" ("sched_name",
                                       "calendar_name",
                                       "misfire_instr",
                                       "job_data")
-VALUES ('MetabaseScheduler', 'metabase.task.task-history-cleanup.trigger', 'DEFAULT', 'metabase.task.task-history-cleanup.job', 'DEFAULT', NULL, 1586930400000, 1586926800000, 5, 'WAITING', 'CRON', 1586870263000, 0, NULL, 0, '\x');
+VALUES ('MetabaseScheduler', 'metabase.task.anonymous-stats.trigger', 'DEFAULT', 'metabase.task.anonymous-stats.job', 'DEFAULT', NULL, 1587532500000, -1, 5, 'WAITING', 'CRON', 1587451964000, 0, NULL, 0, '\x');
 
 
 INSERT INTO "public"."qrtz_triggers" ("sched_name",
@@ -12789,7 +12832,7 @@ INSERT INTO "public"."qrtz_triggers" ("sched_name",
                                       "calendar_name",
                                       "misfire_instr",
                                       "job_data")
-VALUES ('MetabaseScheduler', 'metabase.task.sync-and-analyze.trigger.34', 'DEFAULT', 'metabase.task.sync-and-analyze.job', 'DEFAULT', 'sync-and-analyze Database 34', 1586930400000, 1586926800000, 5, 'WAITING', 'CRON', 1586870263000, 0, NULL, 2, '\xaced0005737200156f72672e71756172747a2e4a6f62446174614d61709fb083e8bfa9b0cb020000787200266f72672e71756172747a2e7574696c732e537472696e674b65794469727479466c61674d61708208e8c3fbc55d280200015a0013616c6c6f77735472616e7369656e74446174617872001d6f72672e71756172747a2e7574696c732e4469727479466c61674d617013e62ead28760ace0200025a000564697274794c00036d617074000f4c6a6176612f7574696c2f4d61703b787001737200116a6176612e7574696c2e486173684d61700507dac1c31660d103000246000a6c6f6164466163746f724900097468726573686f6c6478703f4000000000000c7708000000100000000174000564622d6964737200116a6176612e6c616e672e496e746567657212e2a0a4f781873802000149000576616c7565787200106a6176612e6c616e672e4e756d62657286ac951d0b94e08b0200007870000000227800');
+VALUES ('MetabaseScheduler', 'metabase.task.abandonment-emails.trigger', 'DEFAULT', 'metabase.task.abandonment-emails.job', 'DEFAULT', NULL, 1587463200000, -1, 5, 'WAITING', 'CRON', 1587451964000, 0, NULL, 0, '\x');
 
 
 INSERT INTO "public"."qrtz_triggers" ("sched_name",
@@ -12808,7 +12851,7 @@ INSERT INTO "public"."qrtz_triggers" ("sched_name",
                                       "calendar_name",
                                       "misfire_instr",
                                       "job_data")
-VALUES ('MetabaseScheduler', 'metabase.task.anonymous-stats.trigger', 'DEFAULT', 'metabase.task.anonymous-stats.job', 'DEFAULT', NULL, 1587014100000, 1586927700000, 5, 'WAITING', 'CRON', 1586870263000, 0, NULL, 0, '\x');
+VALUES ('MetabaseScheduler', 'metabase.task.send-pulses.trigger', 'DEFAULT', 'metabase.task.send-pulses.job', 'DEFAULT', NULL, 1587452400000, -1, 5, 'WAITING', 'CRON', 1587451964000, 0, NULL, 1, '\x');
 
 
 INSERT INTO "public"."qrtz_triggers" ("sched_name",
@@ -12827,7 +12870,7 @@ INSERT INTO "public"."qrtz_triggers" ("sched_name",
                                       "calendar_name",
                                       "misfire_instr",
                                       "job_data")
-VALUES ('MetabaseScheduler', 'metabase.task.abandonment-emails.trigger', 'DEFAULT', 'metabase.task.abandonment-emails.job', 'DEFAULT', NULL, 1586944800000, -1, 5, 'WAITING', 'CRON', 1586870263000, 0, NULL, 0, '\x');
+VALUES ('MetabaseScheduler', 'metabase.task.follow-up-emails.trigger', 'DEFAULT', 'metabase.task.follow-up-emails.job', 'DEFAULT', NULL, 1587463200000, -1, 5, 'WAITING', 'CRON', 1587451964000, 0, NULL, 0, '\x');
 
 
 INSERT INTO "public"."qrtz_triggers" ("sched_name",
@@ -12846,7 +12889,7 @@ INSERT INTO "public"."qrtz_triggers" ("sched_name",
                                       "calendar_name",
                                       "misfire_instr",
                                       "job_data")
-VALUES ('MetabaseScheduler', 'metabase.task.follow-up-emails.trigger', 'DEFAULT', 'metabase.task.follow-up-emails.job', 'DEFAULT', NULL, 1586944800000, -1, 5, 'WAITING', 'CRON', 1586870263000, 0, NULL, 0, '\x');
+VALUES ('MetabaseScheduler', 'metabase.task.task-history-cleanup.trigger', 'DEFAULT', 'metabase.task.task-history-cleanup.job', 'DEFAULT', NULL, 1587452400000, -1, 5, 'WAITING', 'CRON', 1587451964000, 0, NULL, 0, '\x');
 
 --
 -- Data for Name: query; Type: TABLE DATA; Schema: public; Owner: metabase
@@ -60161,11 +60204,31 @@ INSERT INTO "public"."task_history" ("id",
                                      "task_details")
 VALUES (2282, 'classify-tables', 34, '2020-04-15 07:00:03.531', '2020-04-15 07:00:03.534', 3, '{"total-tables":2,"tables-classified":0}');
 
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2283, 'task-history-cleanup', NULL, '2020-04-21 08:52:43.989', '2020-04-21 08:52:43.998', 9, NULL);
+
+
+INSERT INTO "public"."task_history" ("id",
+                                     "task",
+                                     "db_id",
+                                     "started_at",
+                                     "ended_at",
+                                     "duration",
+                                     "task_details")
+VALUES (2284, 'send-pulses', NULL, '2020-04-21 08:52:44.142', '2020-04-21 08:52:44.168', 26, NULL);
+
 --
 -- Name: task_history_id_seq; Type: SEQUENCE SET; Schema: public; Owner: metabase
 --
 
-SELECT pg_catalog.setval('"public"."task_history_id_seq"', 2282, TRUE);
+SELECT pg_catalog.setval('"public"."task_history_id_seq"', 2284, TRUE);
 
 --
 -- Data for Name: view_log; Type: TABLE DATA; Schema: public; Owner: metabase
