@@ -1,3 +1,9 @@
+# Repository moved!
+
+See https://github.com/EU-OSHA/oira.statistics.buildout
+
+
+
 # OSHA OiRA Statistics Deployment
 
 This buildout configuration sets up a number of metabase instances to serve the OSHA OiRA statistics and generates scripts to prime them with a database dump and tweak their settings afterwards.
